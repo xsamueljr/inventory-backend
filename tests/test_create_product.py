@@ -1,25 +1,20 @@
 from typing import Tuple
+
 import pytest
 
 from tests.mocks import mock_mailer, MockMailer, mock_product_repository, MockProductRepository
 from emails.domain.email import Email
-from emails.domain.email_sender import EmailSender
-from products.application.create_product import CreateProductUseCase, EmailConfig
+from emails.domain.emailer import Emailer
+from products.application.create_product import CreateProductUseCase
 from products.application.dtos.create_product import CreateProductDTO
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 
 
 @pytest.fixture
-def email_config() -> EmailConfig:
-    return EmailConfig(gmail_address='this', boss_email='that')
-
-
-@pytest.fixture
-def use_case_and_dependencies(mock_mailer, email_config, mock_product_repository) -> Tuple[CreateProductUseCase, MockMailer, MockProductRepository]:
+def use_case_and_dependencies(mock_mailer, mock_product_repository) -> Tuple[CreateProductUseCase, MockMailer, MockProductRepository]:
     usecase = CreateProductUseCase(
         mock_product_repository,
-        mock_mailer,
-        email_config
+        mock_mailer
     )
     
     return (usecase, mock_mailer, mock_product_repository)

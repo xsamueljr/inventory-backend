@@ -1,6 +1,5 @@
 from typing import Dict
 
-from products.domain.dtos.update_product import UpdateProductDTO
 from products.domain.exceptions.product_not_found import ProductNotFoundException
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
@@ -15,26 +14,29 @@ class InMemoryProductRepository(ProductRepository):
         self.__products[product.id] = product
     
     def get_by_id(self, id: str) -> Product | None:
-        return self.__products.get(id)
+        return self.__copy(self.__products.get(id))
     
     def get_by_name(self, name: str) -> Product | None:
         for product in self.__products.values():
-            if product.model == name:
-                return product
+            if product.name == name:
+                return self.__copy(product)
         return None
     
-    def update(self, id: str, input: UpdateProductDTO) -> Product:
-        product = self.get_by_id(id)
+    def update(self, product: Product) -> None:
+        existing_product = self.get_by_id(product.id)
+        if not existing_product:
+            raise ProductNotFoundException(product.id)
+
+        self.__products[existing_product.id] = product
+    
+    def __copy(self, product: Product | None) -> Product | None:
         if not product:
-            raise ProductNotFoundException(id)
+            return None
         
-        if input.model:
-            product.model = input.model
-        if input.color:
-            product.color = input.color
-        if input.arriving_date:
-            product.arriving_date = input.arriving_date
-        if input.stock:
-            product.stock = input.stock
-        
-        return product
+        return Product(
+            product.name,
+            product.color,
+            product.stock,
+            product.arriving_date,
+            product.id
+        )

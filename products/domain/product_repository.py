@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from products.domain.dtos.update_product import UpdateProductDTO
 from products.domain.product import Product
 
 
@@ -17,4 +16,4 @@ class ProductRepository(ABC):
     def get_by_name(self, name: str) -> Optional[Product]: ...
     
     @abstractmethod
-    def update(self, id: str, input: UpdateProductDTO) -> Product: ...
+    def update(self, product: Product) -> None: ...

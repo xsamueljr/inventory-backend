@@ -6,7 +6,7 @@ from uuid import uuid4
 
 @dataclass
 class Product:
-    model: str
+    name: str
     color: str
     stock: int
     arriving_date: Optional[date] = None

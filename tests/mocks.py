@@ -1,14 +1,14 @@
 from typing import Callable, List
 import pytest
 from emails.domain.email import Email
-from emails.domain.email_sender import EmailSender
+from emails.domain.emailer import Emailer
 from products.domain.dtos.update_product import UpdateProductDTO
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 
 
-class MockMailer(EmailSender):
+class MockMailer(Emailer):
 
     def __init__(self) -> None:
         self.__calls: List[Email] = []
@@ -18,6 +18,9 @@ class MockMailer(EmailSender):
     
     def was_called_once(self) -> bool:
         return len(self.__calls) == 1
+
+    def calls_count(self) -> int:
+        return len(self.__calls)
 
 
 class MockProductRepository(ProductRepository):
@@ -37,8 +40,10 @@ class MockProductRepository(ProductRepository):
     def get_all(self) -> List[Product]:
         return [product for product in self.__products]
     
-    def update(self, id: str, input: UpdateProductDTO) -> Product:
-        raise NotImplementedError("Update method in mock product repository is not implemented")
+    def update(self, product: Product) -> None:
+        raise NotImplementedError(
+            "Update method in mock product repository may not be needed right now (implement it otherwise)"
+        )
     
     def __query(self, criteria: Callable[[Product], bool]) -> Product | None:
         return list(filter(criteria, self.__products))[0]

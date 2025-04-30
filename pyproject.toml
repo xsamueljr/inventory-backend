@@ -6,10 +6,10 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.11.3",
-    "pytest>=8.3.5",
 ]
 
 [dependency-groups]
 dev = [
+    "faker>=37.1.0",
     "pytest>=8.3.5",
 ]
