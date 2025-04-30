@@ -1,0 +1,27 @@
+name: Test
+
+on: 
+    push:
+        paths:
+            - '**.py'
+            - '**.yml'
+    pull_request: 
+        paths: 
+            - '**.py'
+            - '**.yml'
+
+jobs:
+    test:
+        runs-on: ubuntu-22.04
+
+        steps:
+          - name: Checkout repo
+            uses: actions/checkout@v4.2.2
+        
+          - name: Install the latest version of uv and set the python version
+            uses: astral-sh/setup-uv@v6
+            with:
+              python-version: '3.11'
+        
+          - name: Run tests
+            run: uv run pytest -vv
