@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Tuple
 
 import pytest
@@ -7,34 +8,39 @@ from products.infrastructure.in_memory_product_repository import InMemoryProduct
 from tests.mocks import MockMailer
 from tests.mothers.product import ProductMother
 
+
+@dataclass
+class RegisterSaleSetup:
+    usecase: RegisterSaleUsecase
+    repo: InMemoryProductRepository
+    mailer: MockMailer
+
+
 @pytest.fixture
-def register_case_and_dependencies() -> Tuple[RegisterSaleUsecase, InMemoryProductRepository, MockMailer]:
+def sell_setup() -> RegisterSaleSetup:
     repo = InMemoryProductRepository()
     mailer = MockMailer()
 
     usecase = RegisterSaleUsecase(repo, mailer)
     
-    return (usecase, repo, mailer)
+    return RegisterSaleSetup(usecase, repo, mailer)
 
 
-def test_happy_path(register_case_and_dependencies) -> None:
-    usecase, repo, mailer = register_case_and_dependencies
+def test_happy_path(sell_setup) -> None:
     product = ProductMother.create(stock=5)
-    repo.save(product)
+    sell_setup.repo.save(product)
 
-    usecase.run(product.name, 3)
+    sell_setup.usecase.run(product.name, 3)
 
-    after_sale_product = repo.get_by_id(product.id)
+    after_sale_product = sell_setup.repo.get_by_id(product.id)
 
     assert after_sale_product.stock == 2
 
 
-def test_if_stock_left_zero_or_negative_then_mail_is_sent(register_case_and_dependencies) -> None:
-    usecase, repo, mailer = register_case_and_dependencies
+def test_if_stock_left_zero_or_negative_then_mail_is_sent(sell_setup) -> None:
     product = ProductMother.create(stock=2)
-    repo.save(product)
+    sell_setup.repo.save(product)
 
-    usecase.run(product.name, 3)
+    sell_setup.usecase.run(product.name, 3)
 
-
-    assert mailer.calls_count() == 2
+    assert sell_setup.mailer.calls_count() == 2
