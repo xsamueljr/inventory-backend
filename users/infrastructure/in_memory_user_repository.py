@@ -13,3 +13,10 @@ class InMemoryUserRepository(UserRepository):
     
     def get_by_id(self, id: str) -> User | None:
         return self.__users.get(id)
+    
+    def get_by_username(self, username: str) -> User | None:
+        print(len(self.__users))
+        for user in self.__users.values():
+            if user.username == username:
+                return user
+        return None

@@ -11,3 +11,6 @@ class UserRepository(ABC):
 
     @abstractmethod
     def get_by_id(self, id: str) -> Optional[User]: ...
+
+    @abstractmethod
+    def get_by_username(self, username: str) -> Optional[User]: ...

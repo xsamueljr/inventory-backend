@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
-from turtle import st
-from typing import Any, Dict
 
+from idna import decode
 from jose.exceptions import ExpiredSignatureError
 from jose import JWTError, jwt
 
@@ -33,9 +32,14 @@ class JwtTokenManager(TokenManager):
     
     def decrypt(self, token: AuthToken) -> str:
         try:
+            print("decrypting")
             decoded = jwt.decode(token.content, self.__secret_key)
+            print(decoded)
+            print(decoded["sub"])
             return decoded["sub"]
         except ExpiredSignatureError:
+            print("already expired")
             raise ExpiredTokenException()
-        except JWTError:
+        except JWTError as e:
+            print(f"weird error: {e}")
             raise InvalidTokenException()
