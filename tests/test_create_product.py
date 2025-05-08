@@ -1,4 +1,4 @@
-from typing import Tuple
+from dataclasses import dataclass
 
 import pytest
 
@@ -10,23 +10,28 @@ from products.application.dtos.create_product import CreateProductDTO
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 
 
+@dataclass
+class CreateProductSetup:
+    usecase: CreateProductUseCase
+    repo: MockProductRepository
+    mailer: MockMailer
+
+
 @pytest.fixture
-def use_case_and_dependencies(mock_mailer, mock_product_repository) -> Tuple[CreateProductUseCase, MockMailer, MockProductRepository]:
+def create_product_setup(mock_mailer, mock_product_repository) -> CreateProductSetup:
     usecase = CreateProductUseCase(
         mock_product_repository,
         mock_mailer
     )
-    
-    return (usecase, mock_mailer, mock_product_repository)
+
+    return CreateProductSetup(usecase, mock_product_repository, mock_mailer)
 
 
-def test_happy_path(use_case_and_dependencies):
-    use_case, mailer, repo = use_case_and_dependencies
-
+def test_happy_path(create_product_setup: CreateProductSetup):
     input = CreateProductDTO("Sofá beisbol", "Blanco")
 
-    id = use_case.run(input)
+    id = create_product_setup.usecase.run(input)
 
     assert id is not None
-    assert mailer.was_called_once()
-    assert len(repo.get_all()) == 1
+    assert create_product_setup.mailer.was_called_once()
+    assert len(create_product_setup.repo.get_all()) == 1
