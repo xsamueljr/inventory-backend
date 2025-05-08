@@ -35,7 +35,7 @@ class MockProductRepository(ProductRepository):
         return self.__query(lambda product: product.id == id)
     
     def get_by_name(self, name: str) -> Product | None:
-        return self.__query(lambda product: product.id == name)
+        return self.__query(lambda product: product.name == name)
     
     def get_all(self) -> List[Product]:
         return [product for product in self.__products]
@@ -46,7 +46,7 @@ class MockProductRepository(ProductRepository):
         )
     
     def __query(self, criteria: Callable[[Product], bool]) -> Product | None:
-        return list(filter(criteria, self.__products))[0]
+        return next(filter(criteria, self.__products), None)
 
 
 @pytest.fixture
