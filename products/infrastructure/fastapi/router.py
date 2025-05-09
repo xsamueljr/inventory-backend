@@ -15,6 +15,7 @@ def create(
     request: CreateProductRequest,
     user: User = Depends(get_current_user),
     usecase: CreateProductUseCase = Depends(get_create_product_usecase)
-) -> None:
+):
     input = request.map_to_domain()
-    usecase.run(input)
+    id = usecase.run(input)
+    return {"id": id}
