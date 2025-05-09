@@ -47,6 +47,13 @@ def test_if_stock_left_zero_or_negative_then_another_mail_is_sent(sell_setup) ->
 
     assert sell_setup.mailer.calls_count() == 2
 
+
 def test_cannot_register_sale_for_a_product_that_does_not_exist(sell_setup) -> None:
     with pytest.raises(ProductNotFoundException):
         sell_setup.usecase.run(SaleDTO("irrelevant-id", 2))
+
+
+@pytest.mark.parametrize("amount", (0, -1, -5, -99))
+def test_sale_with_zero_or_negative_amount_cannot_exist(amount) -> None:
+    with pytest.raises(ValueError):
+        SaleDTO("irrelevant-id", amount)
