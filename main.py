@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 import uvicorn
+from dotenv import load_dotenv
 
-from auth.infrastructure.bcrypt_password_hasher import BcryptPasswordHasher
+# Run before import anything else 
+# so no module access the un-prepared environment 
+load_dotenv()
+
 from auth.infrastructure.fastapi.router import create_auth_router
-from auth.infrastructure.jwt_token_manager import JwtTokenManager
-from users.infrastructure.in_memory_user_repository import InMemoryUserRepository
 from products.infrastructure.fastapi.router import router as products_router
 
 
