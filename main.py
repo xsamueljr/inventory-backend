@@ -1,10 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
 
-from auth.infrastructure.bcrypt_password_hasher import BcryptPasswordHasher
 from auth.infrastructure.fastapi.router import create_auth_router
-from auth.infrastructure.jwt_token_manager import JwtTokenManager
-from users.infrastructure.in_memory_user_repository import InMemoryUserRepository
 from products.infrastructure.fastapi.router import router as products_router
 
 

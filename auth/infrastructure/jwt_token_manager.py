@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from idna import decode
 from jose.exceptions import ExpiredSignatureError
 from jose import JWTError, jwt
 
@@ -8,11 +7,12 @@ from auth.domain.auth_token import AuthToken
 from auth.domain.exceptions.expired_token import ExpiredTokenException
 from auth.domain.exceptions.invalid_token import InvalidTokenException
 from auth.domain.token_manager import TokenManager
+from shared.infrastructure.env import env
 
 
 class JwtTokenManager(TokenManager):
     def __init__(self) -> None:
-        self.__secret_key = "GET FROM ENV LATER"
+        self.__secret_key = env.JWT_SECRET_KEY
 
     def encrypt(self, user_id: str) -> AuthToken:
         
