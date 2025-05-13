@@ -28,7 +28,7 @@ def create_product_setup(mock_mailer, mock_product_repository) -> CreateProductS
 
 
 def test_happy_path(create_product_setup: CreateProductSetup):
-    input = CreateProductDTO("Sofá beisbol", "Blanco")
+    input = CreateProductDTO("Sofá beisbol")
 
     id = create_product_setup.usecase.run(input)
 

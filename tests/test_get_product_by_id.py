@@ -1,31 +1,32 @@
 from dataclasses import dataclass
-from typing import Tuple
+from uuid import uuid4
 
 import pytest
 
 from products.application.dtos.public_product import PublicProductInfo
 from products.application.get_by_id import GetProductByIdUsecase
 from products.domain.exceptions.product_not_found import ProductNotFoundException
+from products.domain.product_repository import ProductRepository
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
+from products.infrastructure.sqlite_product_repository import SQLiteProductRepository
+from shared.infrastructure.sqlite_connection import get_connection
 from tests.mothers.product import ProductMother
 
 
 @dataclass
 class GetProductByIdSetup:
-    repo: InMemoryProductRepository
+    repo: ProductRepository
     usecase: GetProductByIdUsecase
 
 
-ID_EXAMPLES: Tuple[str, ...] = ("id1", "id2", "id3")
-
 @pytest.fixture
 def get_product_setup() -> GetProductByIdSetup:
-    repo = InMemoryProductRepository()
+    repo = SQLiteProductRepository("test.db")
     usecase = GetProductByIdUsecase(repo)
     return GetProductByIdSetup(repo, usecase)
 
 
-@pytest.mark.parametrize("id", ID_EXAMPLES)
+@pytest.mark.parametrize("id", ("id1", "id2", "id3"))
 def test_it_works(id: str, get_product_setup: GetProductByIdSetup) -> None:
     product = ProductMother.create(id=id)
     get_product_setup.repo.save(product)
@@ -38,7 +39,6 @@ def test_it_works(id: str, get_product_setup: GetProductByIdSetup) -> None:
     assert product.stock == retrieved_product.stock
 
 
-@pytest.mark.parametrize("id", ID_EXAMPLES)
-def test_throws_exception_if_not_found(id: str, get_product_setup: GetProductByIdSetup) -> None:
+def test_throws_exception_if_not_found(get_product_setup: GetProductByIdSetup) -> None:
     with pytest.raises(ProductNotFoundException):
-        get_product_setup.usecase.run(id)
+        get_product_setup.usecase.run(str(uuid4()))

@@ -9,7 +9,6 @@ class ProductMother:
     def create(
             *,
             model: str | None = None,
-            color: str | None = None,
             stock: int | None = None,
             arriving_date: date | None = None,
             id: str | None = None
@@ -18,7 +17,6 @@ class ProductMother:
 
         return Product(
             model or faker.name(),
-            color or faker.color(),
             stock or faker.random_number(),
             arriving_date,
             id or faker.uuid4()

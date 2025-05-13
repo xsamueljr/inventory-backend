@@ -10,11 +10,12 @@ from products.application.get_by_id import GetProductByIdUsecase
 from products.application.register_sell import RegisterSaleUsecase
 from products.domain.product_repository import ProductRepository
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
+from products.infrastructure.sqlite_product_repository import SQLiteProductRepository
 
 
 @lru_cache
 def get_product_repository() -> ProductRepository:
-    return InMemoryProductRepository()
+    return SQLiteProductRepository()
 
 
 def get_create_product_usecase(

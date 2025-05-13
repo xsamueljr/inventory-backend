@@ -38,7 +38,6 @@ class InMemoryProductRepository(ProductRepository):
         
         return Product(
             product.name,
-            product.color,
             product.stock,
             product.arriving_date,
             product.id

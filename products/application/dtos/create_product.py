@@ -7,15 +7,13 @@ from products.domain.product import Product
 
 @dataclass
 class CreateProductDTO:
-    model: str
-    color: str
+    name: str
     stock: int = 0
     arriving_date: Optional[date] = None
     
     def to_domain(self) -> Product:
         return Product(
-            self.model,
-            self.color,
+            self.name,
             self.stock,
             self.arriving_date
         )
