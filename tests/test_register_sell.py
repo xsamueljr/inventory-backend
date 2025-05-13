@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Tuple
 
 import pytest
 
@@ -18,7 +17,7 @@ class RegisterSaleSetup:
 
 
 @pytest.fixture
-def sell_setup() -> RegisterSaleSetup:
+def sale_setup() -> RegisterSaleSetup:
     repo = InMemoryProductRepository()
     mailer = MockMailer()
 
@@ -27,30 +26,30 @@ def sell_setup() -> RegisterSaleSetup:
     return RegisterSaleSetup(usecase, repo, mailer)
 
 
-def test_happy_path(sell_setup) -> None:
+def test_happy_path(sale_setup) -> None:
     product = ProductMother.create(stock=5)
-    sell_setup.repo.save(product)
+    sale_setup.repo.save(product)
 
-    sell_setup.usecase.run(SaleDTO(product.id, 3))
+    sale_setup.usecase.run(SaleDTO(product.id, 3))
 
-    after_sale_product = sell_setup.repo.get_by_id(product.id)
+    after_sale_product = sale_setup.repo.get_by_id(product.id)
 
     assert after_sale_product.stock == 2
-    assert sell_setup.mailer.was_called_once()
+    assert sale_setup.mailer.was_called_once()
 
 
-def test_if_stock_left_zero_or_negative_then_another_mail_is_sent(sell_setup) -> None:
+def test_if_stock_left_zero_or_negative_then_another_mail_is_sent(sale_setup) -> None:
     product = ProductMother.create(stock=2)
-    sell_setup.repo.save(product)
+    sale_setup.repo.save(product)
 
-    sell_setup.usecase.run(SaleDTO(product.id, 3))
+    sale_setup.usecase.run(SaleDTO(product.id, 3))
 
-    assert sell_setup.mailer.calls_count() == 2
+    assert sale_setup.mailer.calls_count() == 2
 
 
-def test_cannot_register_sale_for_a_product_that_does_not_exist(sell_setup) -> None:
+def test_cannot_register_sale_for_a_product_that_does_not_exist(sale_setup) -> None:
     with pytest.raises(ProductNotFoundException):
-        sell_setup.usecase.run(SaleDTO("irrelevant-id", 2))
+        sale_setup.usecase.run(SaleDTO("irrelevant-id", 2))
 
 
 @pytest.mark.parametrize("amount", (0, -1, -5, -99))

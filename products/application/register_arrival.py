@@ -26,7 +26,6 @@ class RegisterArrivalUsecase:
         self.__repo = repo
     
     def run(self, input: ArrivalDTO) -> None:
-        """Creates the new product or add stock to existing one"""
         product = self.__repo.get_by_id(input.id)
         if not product:
             raise ProductNotFoundException(input.id)

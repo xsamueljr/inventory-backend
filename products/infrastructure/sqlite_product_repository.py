@@ -1,11 +1,15 @@
-from datetime import date
-from typing import Any, List, Tuple
+from enum import Enum
+import sqlite3
+from typing import Any, List
 
+from products.domain.exceptions.product_already_exists import ProductAlreadyExistsException
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
 from shared.infrastructure.sqlite_connection import get_connection
 
-PersonRow = Tuple[str, str, int, date]
+
+class SQLiteErrorCodes(Enum):
+    CONSTRAINT_UNIQUE = 2067
 
 
 class SQLiteProductRepository(ProductRepository):
@@ -29,13 +33,18 @@ class SQLiteProductRepository(ProductRepository):
     
     def save(self, product: Product) -> None:
         cur = self.__conn.cursor()
-        
-        cur.execute("INSERT INTO products (id, name, stock, arriving_date) VALUES (?, ?, ?, ?)", (
-            product.id, product.name, product.stock, product.arriving_date
-        ))
+        try:
+            cur.execute("INSERT INTO products (id, name, stock, arriving_date) VALUES (?, ?, ?, ?)", (
+                product.id, product.name, product.stock, product.arriving_date
+            ))
 
-        self.__conn.commit()
-        cur.close()
+            self.__conn.commit()
+        except sqlite3.Error as e:
+            if e.sqlite_errorcode == SQLiteErrorCodes.CONSTRAINT_UNIQUE:
+                raise ProductAlreadyExistsException(id=product.id)
+            print(e)
+        finally:
+            cur.close()
 
     def get_by_id(self, id: str) -> Product | None:
         return self.__get_one("id", id)
