@@ -3,6 +3,7 @@ from typing import List, TypedDict
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from auth.domain.logged_user_info import LoggedUserInfo
 from core.infrastructure.fastapi.security import get_current_user
 from products.application.create_product import CreateProductUseCase
 from products.application.dtos.public_product import PublicProductInfo
@@ -39,7 +40,7 @@ def get_by_id(
 @router.post("", status_code=201)
 def create(
     request: CreateProductRequest,
-    user: User = Depends(get_current_user),
+    user: LoggedUserInfo = Depends(get_current_user),
     usecase: CreateProductUseCase = Depends(get_create_product_usecase)
 ) -> CreateProductResponse:
     input = request.map_to_domain()
@@ -50,7 +51,7 @@ def create(
 @router.post("/sale", status_code=201)
 def register_sale(
     request: RegisterSaleRequest,
-    user: User = Depends(get_current_user),
+    user: LoggedUserInfo = Depends(get_current_user),
     usecase: RegisterSaleUsecase = Depends(get_register_sale_usecase)
 ) -> None:
     try:
@@ -62,7 +63,7 @@ def register_sale(
 @router.post("/arrival", status_code=201)
 def register_arrival(
     request: RegisterArrivalRequest,
-    user: User = Depends(get_current_user),
+    user: LoggedUserInfo = Depends(get_current_user),
     usecase: RegisterArrivalUsecase = Depends(get_register_arrival_usecase)
 ) -> None:
     try:
