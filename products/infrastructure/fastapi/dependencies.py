@@ -5,6 +5,8 @@ from fastapi import Depends
 from core.infrastructure.fastapi.dependencies import get_mailer
 from emails.domain.emailer import Emailer
 from products.application.create_product import CreateProductUseCase
+from products.application.get_all import GetAllProductsUsecase
+from products.application.register_sell import RegisterSaleUsecase
 from products.domain.product_repository import ProductRepository
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 
@@ -19,3 +21,12 @@ def get_create_product_usecase(
         mailer: Emailer = Depends(get_mailer)
 ) -> CreateProductUseCase:
     return CreateProductUseCase(product_repository, mailer)
+
+def get_register_sale_usecase(
+        product_repository: ProductRepository = Depends(get_product_repository),
+        mailer: Emailer = Depends(get_mailer)
+) -> RegisterSaleUsecase:
+    return RegisterSaleUsecase(product_repository, mailer)
+
+def get_all_products_usecase(repo: ProductRepository = Depends(get_product_repository)) -> GetAllProductsUsecase:
+    return GetAllProductsUsecase(repo)

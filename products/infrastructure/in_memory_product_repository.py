@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from products.domain.exceptions.product_not_found import ProductNotFoundException
 from products.domain.product import Product
@@ -12,6 +12,9 @@ class InMemoryProductRepository(ProductRepository):
 
     def save(self, product: Product) -> None:
         self.__products[product.id] = product
+    
+    def get_all(self) -> List[Product]:
+        return list(self.__products.values())
     
     def get_by_id(self, id: str) -> Product | None:
         return self.__copy(self.__products.get(id))
