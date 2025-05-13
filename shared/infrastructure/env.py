@@ -9,6 +9,7 @@ load_dotenv()
 
 class EnvConfig(BaseModel):
     JWT_SECRET_KEY: str
+    SQLITE_PATH: Optional[str] = Field(default=None)
     GMAIL_ADDRESS: EmailStr
     GMAIL_PASSWORD: str
     BOSS_EMAIL_ADDRESS: EmailStr

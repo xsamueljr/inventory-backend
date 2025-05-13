@@ -7,7 +7,7 @@ from products.domain.product_repository import ProductRepository
 
 @dataclass
 class ArrivalDTO:
-    name: str
+    id: str
     amount: int
 
     def __post_init__(self) -> None:
@@ -21,17 +21,15 @@ class ArrivalDTO:
 class RegisterArrivalUsecase:
     def __init__(
             self,
-            repo: ProductRepository,
-            mailer: Emailer
+            repo: ProductRepository
     ) -> None:
         self.__repo = repo
-        self.__mailer = mailer
     
     def run(self, input: ArrivalDTO) -> None:
         """Creates the new product or add stock to existing one"""
-        product = self.__repo.get_by_name(input.name)
+        product = self.__repo.get_by_id(input.id)
         if not product:
-            raise ProductNotFoundException()
+            raise ProductNotFoundException(input.id)
         
         product.stock += input.amount
         self.__repo.update(product)

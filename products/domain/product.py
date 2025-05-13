@@ -7,7 +7,6 @@ from uuid import uuid4
 @dataclass
 class Product:
     name: str
-    color: str
     stock: int
     arriving_date: Optional[date] = None
 

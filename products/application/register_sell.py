@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from emails.domain.email import Email
 from emails.domain.emailer import Emailer
 from emails.domain.stock_warning import StockWarningEmail
@@ -15,6 +16,7 @@ class SaleDTO:
         if self.amount <= 0:
             raise ValueError("¿Una venta con cantidad negativa? ¿Seguro que esto no es una llegada?") # TODO: excepción personalizada
 
+
 class RegisterSaleUsecase:
 
     def __init__(self, repo: ProductRepository, mailer: Emailer) -> None:
@@ -24,7 +26,7 @@ class RegisterSaleUsecase:
     def run(self, input: SaleDTO) -> None:
         product = self.__repo.get_by_id(input.product_id)
         if not product:
-            raise ProductNotFoundException()
+            raise ProductNotFoundException(input.product_id)
         
         new_stock = product.stock - input.amount
         product.stock = new_stock
