@@ -4,11 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from core.infrastructure.fastapi.security import get_current_user
 from products.application.create_product import CreateProductUseCase
+from products.application.dtos.public_product import PublicProductInfo
+from products.application.get_all import GetAllProductsUsecase
 from products.application.register_sell import RegisterSaleUsecase
 from products.domain.exceptions.product_not_found import ProductNotFoundException
-from products.domain.product import Product
-from products.domain.product_repository import ProductRepository
-from products.infrastructure.fastapi.dependencies import get_create_product_usecase, get_product_repository, get_register_sale_usecase
+from products.infrastructure.fastapi.dependencies import get_all_products_usecase, get_create_product_usecase, get_product_repository, get_register_sale_usecase
 from products.infrastructure.fastapi.dtos import CreateProductRequest, RegisterSaleRequest
 from users.domain.user import User
 
@@ -19,8 +19,8 @@ class CreateProductResponse(TypedDict):
 router = APIRouter(prefix="/api/products", tags=["products"])
 
 @router.get("")
-def get_all(product_repository: ProductRepository = Depends(get_product_repository)) -> List[Product]:
-    return product_repository.get_all()
+def get_all(usecase: GetAllProductsUsecase = Depends(get_all_products_usecase)) -> List[PublicProductInfo]:
+    return usecase.run()
 
 
 @router.post("", status_code=201)
