@@ -20,3 +20,6 @@ class ProductRepository(ABC):
     
     @abstractmethod
     def update(self, product: Product) -> None: ...
+
+    @abstractmethod
+    def delete(self, id: str) -> None: ...

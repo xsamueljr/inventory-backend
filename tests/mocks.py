@@ -45,6 +45,12 @@ class MockProductRepository(ProductRepository):
             "Update method in mock product repository may not be needed right now (implement it otherwise)"
         )
     
+    def delete(self, id: str) -> None:
+        for i, product in enumerate(self.__products):
+            if product.id == id:
+                self.__products.pop(i)
+                break
+    
     def __query(self, criteria: Callable[[Product], bool]) -> Product | None:
         return next(filter(criteria, self.__products), None)
 

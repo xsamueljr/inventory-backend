@@ -5,6 +5,7 @@ from fastapi import Depends
 from core.infrastructure.fastapi.dependencies import get_mailer
 from emails.domain.emailer import Emailer
 from products.application.create_product import CreateProductUseCase
+from products.application.delete_by_id import DeleteProductByIdUsecase
 from products.application.get_all import GetAllProductsUsecase
 from products.application.get_by_id import GetProductByIdUsecase
 from products.application.register_arrival import RegisterArrivalUsecase
@@ -43,3 +44,6 @@ def get_all_products_usecase(repo: ProductRepository = Depends(get_product_repos
 
 def get_product_by_id_usecase(repo: ProductRepository = Depends(get_product_repository)) -> GetProductByIdUsecase:
     return GetProductByIdUsecase(repo)
+
+def get_delete_product_usecase(repo: ProductRepository = Depends(get_product_repository)) -> DeleteProductByIdUsecase:
+    return DeleteProductByIdUsecase(repo)

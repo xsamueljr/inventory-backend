@@ -63,6 +63,12 @@ class SQLiteProductRepository(ProductRepository):
         self.__conn.commit()
         cur.close()
 
+    def delete(self, id: str) -> None:
+        cur = self.__conn.cursor()
+        cur.execute("DELETE FROM products WHERE id = ?", (id,))
+        self.__conn.commit()
+        cur.close()
+
     def __get_one(self, field: str, value: str) -> Product | None:
         """Helper method for getting a product based on a single field
         
