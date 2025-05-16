@@ -14,6 +14,7 @@ from products.domain.product_repository import ProductRepository
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 from products.infrastructure.sqlite_product_repository import SQLiteProductRepository
 from shared.infrastructure.env import env
+from shared.infrastructure.basic_logger import basic_logger
 
 @lru_cache
 def get_product_repository() -> ProductRepository:
@@ -37,7 +38,7 @@ def get_register_sale_usecase(
 def get_register_arrival_usecase(
         product_repository: ProductRepository = Depends(get_product_repository)
 ) -> RegisterArrivalUsecase:
-    return RegisterArrivalUsecase(product_repository)
+    return RegisterArrivalUsecase(basic_logger, product_repository)
 
 def get_all_products_usecase(repo: ProductRepository = Depends(get_product_repository)) -> GetAllProductsUsecase:
     return GetAllProductsUsecase(repo)

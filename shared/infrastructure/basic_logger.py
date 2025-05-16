@@ -21,3 +21,6 @@ class BasicLogger(Logger):
     
     def error(self, message: str) -> None:
         self.__logger.error(message)
+
+
+basic_logger = BasicLogger()
