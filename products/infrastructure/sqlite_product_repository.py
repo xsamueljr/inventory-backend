@@ -1,4 +1,3 @@
-from enum import Enum
 import sqlite3
 from typing import Any, List
 
@@ -6,10 +5,7 @@ from products.domain.exceptions.product_already_exists import ProductAlreadyExis
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
 from shared.infrastructure.sqlite_connection import get_connection
-
-
-class SQLiteErrorCodes(Enum):
-    CONSTRAINT_UNIQUE = 2067
+from shared.infrastructure.sqlite_error_codes import SQLiteErrorCodes
 
 
 class SQLiteProductRepository(ProductRepository):
@@ -42,7 +38,7 @@ class SQLiteProductRepository(ProductRepository):
         except sqlite3.Error as e:
             if e.sqlite_errorcode == SQLiteErrorCodes.CONSTRAINT_UNIQUE:
                 raise ProductAlreadyExistsException(id=product.id)
-            print(e)
+            raise
         finally:
             cur.close()
 
