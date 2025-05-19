@@ -24,6 +24,7 @@ class SQLiteProductRepository(ProductRepository):
             arriving_date TEXT
         )
         """)
+        conn.commit()
 
         self.__conn = conn
     
@@ -36,7 +37,7 @@ class SQLiteProductRepository(ProductRepository):
 
             self.__conn.commit()
         except sqlite3.Error as e:
-            if e.sqlite_errorcode == SQLiteErrorCodes.CONSTRAINT_UNIQUE:
+            if e.sqlite_errorcode == SQLiteErrorCodes.CONSTRAINT_UNIQUE.value:
                 raise ProductAlreadyExistsException(id=product.id)
             raise
         finally:
