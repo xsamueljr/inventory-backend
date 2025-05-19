@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from tests.mocks import mock_mailer, MockMailer, mock_product_repository, MockProductRepository
+from tests.mocks import MockLogger, mock_mailer, MockMailer, mock_product_repository, MockProductRepository
 from emails.domain.email import Email
 from emails.domain.emailer import Emailer
 from products.application.create_product import CreateProductUseCase
@@ -20,6 +20,7 @@ class CreateProductSetup:
 @pytest.fixture
 def create_product_setup(mock_mailer, mock_product_repository) -> CreateProductSetup:
     usecase = CreateProductUseCase(
+        MockLogger(),
         mock_product_repository,
         mock_mailer
     )
@@ -27,10 +28,10 @@ def create_product_setup(mock_mailer, mock_product_repository) -> CreateProductS
     return CreateProductSetup(usecase, mock_product_repository, mock_mailer)
 
 
-def test_happy_path(create_product_setup: CreateProductSetup):
+def test_happy_path(create_product_setup: CreateProductSetup, mock_user):
     input = CreateProductDTO("Sofá beisbol")
 
-    id = create_product_setup.usecase.run(input)
+    id = create_product_setup.usecase.run(mock_user, input)
 
     assert id is not None
     assert create_product_setup.mailer.was_called_once()
