@@ -44,7 +44,7 @@ def create(
     usecase: CreateProductUseCase = Depends(get_create_product_usecase)
 ) -> CreateProductResponse:
     input = request.map_to_domain()
-    id = usecase.run(input)
+    id = usecase.run(user, input)
     return {"id": id}
 
 
@@ -54,7 +54,7 @@ def delete(
     user: LoggedUserInfo = Depends(get_current_user),
     usecase: DeleteProductByIdUsecase = Depends(get_delete_product_usecase)
 ) -> None:
-    usecase.run(id)
+    usecase.run(user, id)
 
 @router.post("/sale", status_code=201)
 def register_sale(
@@ -63,7 +63,7 @@ def register_sale(
     usecase: RegisterSaleUsecase = Depends(get_register_sale_usecase)
 ) -> None:
     try:
-        usecase.run(request.map_to_dto())
+        usecase.run(user, request.map_to_dto())
     except ProductNotFoundException:
         raise HTTPException(status_code=404, detail="Product not found")
 
@@ -75,6 +75,6 @@ def register_arrival(
     usecase: RegisterArrivalUsecase = Depends(get_register_arrival_usecase)
 ) -> None:
     try:
-        usecase.run(request.map_to_dto())
+        usecase.run(user, request.map_to_dto())
     except ProductNotFoundException:
         raise HTTPException(status_code=404, detail="Product not found")

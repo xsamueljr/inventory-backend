@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from auth.domain.logged_user_info import LoggedUserInfo
 from emails.domain.email import Email
 from emails.domain.emailer import Emailer
 from emails.domain.stock_warning import StockWarningEmail
@@ -23,7 +24,7 @@ class RegisterSaleUsecase:
         self.__repo = repo
         self.__mailer = mailer
     
-    def run(self, input: SaleDTO) -> None:
+    def run(self, user: LoggedUserInfo, input: SaleDTO) -> None:
         product = self.__repo.get_by_id(input.product_id)
         if not product:
             raise ProductNotFoundException(input.product_id)
@@ -34,7 +35,7 @@ class RegisterSaleUsecase:
 
         self.__mailer.send(Email(
             subject="Venta registrada",
-            body=f"Se ha/n vendido {input.amount} unidad/es de {product.name}"
+            body=f"{user.name} ha vendido {input.amount} unidad/es de {product.name}"
         )) # TODO: a lo mejor esto genera demasiados correos
 
         if new_stock <= 1:

@@ -6,6 +6,7 @@ from products.domain.dtos.update_product import UpdateProductDTO
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
 from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
+from shared.domain.logger import Logger
 
 
 class MockMailer(Emailer):
@@ -53,6 +54,17 @@ class MockProductRepository(ProductRepository):
     
     def __query(self, criteria: Callable[[Product], bool]) -> Product | None:
         return next(filter(criteria, self.__products), None)
+
+
+class MockLogger(Logger):
+    def info(self, message: str) -> None:
+        ...
+    
+    def warning(self, message: str) -> None:
+        ...
+    
+    def error(self, message: str) -> None:
+        ...
 
 
 @pytest.fixture

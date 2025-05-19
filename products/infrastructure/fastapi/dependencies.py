@@ -27,7 +27,7 @@ def get_create_product_usecase(
         product_repository: ProductRepository = Depends(get_product_repository),
         mailer: Emailer = Depends(get_mailer)
 ) -> CreateProductUseCase:
-    return CreateProductUseCase(product_repository, mailer)
+    return CreateProductUseCase(basic_logger, product_repository, mailer)
 
 def get_register_sale_usecase(
         product_repository: ProductRepository = Depends(get_product_repository),
@@ -47,4 +47,4 @@ def get_product_by_id_usecase(repo: ProductRepository = Depends(get_product_repo
     return GetProductByIdUsecase(repo)
 
 def get_delete_product_usecase(repo: ProductRepository = Depends(get_product_repository)) -> DeleteProductByIdUsecase:
-    return DeleteProductByIdUsecase(repo)
+    return DeleteProductByIdUsecase(basic_logger, repo)
