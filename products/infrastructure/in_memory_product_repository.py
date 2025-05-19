@@ -32,6 +32,9 @@ class InMemoryProductRepository(ProductRepository):
 
         self.__products[existing_product.id] = product
     
+    def delete(self, id: str) -> None:
+        self.__products.pop(id, None)
+    
     def __copy(self, product: Product | None) -> Product | None:
         if not product:
             return None

@@ -1,11 +1,11 @@
-from datetime import date
-from typing import Any, List, Tuple
+import sqlite3
+from typing import Any, List
 
+from products.domain.exceptions.product_already_exists import ProductAlreadyExistsException
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
 from shared.infrastructure.sqlite_connection import get_connection
-
-PersonRow = Tuple[str, str, int, date]
+from shared.infrastructure.sqlite_error_codes import SQLiteErrorCodes
 
 
 class SQLiteProductRepository(ProductRepository):
@@ -29,13 +29,18 @@ class SQLiteProductRepository(ProductRepository):
     
     def save(self, product: Product) -> None:
         cur = self.__conn.cursor()
-        
-        cur.execute("INSERT INTO products (id, name, stock, arriving_date) VALUES (?, ?, ?, ?)", (
-            product.id, product.name, product.stock, product.arriving_date
-        ))
+        try:
+            cur.execute("INSERT INTO products (id, name, stock, arriving_date) VALUES (?, ?, ?, ?)", (
+                product.id, product.name, product.stock, product.arriving_date
+            ))
 
-        self.__conn.commit()
-        cur.close()
+            self.__conn.commit()
+        except sqlite3.Error as e:
+            if e.sqlite_errorcode == SQLiteErrorCodes.CONSTRAINT_UNIQUE:
+                raise ProductAlreadyExistsException(id=product.id)
+            raise
+        finally:
+            cur.close()
 
     def get_by_id(self, id: str) -> Product | None:
         return self.__get_one("id", id)
@@ -55,6 +60,12 @@ class SQLiteProductRepository(ProductRepository):
         cur.execute("UPDATE products SET name=?, stock=?, arriving_date=? WHERE id=?", (
             product.name, product.stock, product.arriving_date, product.id
         ))
+        self.__conn.commit()
+        cur.close()
+
+    def delete(self, id: str) -> None:
+        cur = self.__conn.cursor()
+        cur.execute("DELETE FROM products WHERE id = ?", (id,))
         self.__conn.commit()
         cur.close()
 
