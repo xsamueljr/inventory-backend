@@ -11,6 +11,7 @@ from auth.domain.password_hasher import PasswordHasher
 from auth.domain.token_manager import TokenManager
 from auth.infrastructure.fastapi.dependencies import get_login_usecase, get_password_hasher, get_register_usecase, get_token_manager
 from auth.infrastructure.fastapi.dtos import LoginRequest, RegisterRequest, TokenResponse
+from shared.infrastructure.env import env
 from users.domain.user_repository import UserRepository
 from users.infrastructure.fastapi.dependencies import get_user_repository
 
@@ -18,16 +19,17 @@ from users.infrastructure.fastapi.dependencies import get_user_repository
 def create_auth_router() -> APIRouter:
     router = APIRouter(prefix="/api/auth", tags=["auth"])
 
-    @router.post("/register", status_code=201)
-    def register(
-        request: RegisterRequest,
-        usecase: RegisterUserUsecase = Depends(get_register_usecase)
-    ) -> None:
-        usecase.run(
-            request.username,
-            request.shop_name,
-            request.password
-        )
+    if env.ENABLE_REGISTER:
+        @router.post("/register", status_code=201)
+        def register(
+            request: RegisterRequest,
+            usecase: RegisterUserUsecase = Depends(get_register_usecase)
+        ) -> None:
+            usecase.run(
+                request.username,
+                request.shop_name,
+                request.password
+            )
     
     @router.post("/login")
     def login(
