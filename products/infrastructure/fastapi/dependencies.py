@@ -33,7 +33,7 @@ def get_register_sale_usecase(
         product_repository: ProductRepository = Depends(get_product_repository),
         mailer: Emailer = Depends(get_mailer)
 ) -> RegisterSaleUsecase:
-    return RegisterSaleUsecase(product_repository, mailer)
+    return RegisterSaleUsecase(product_repository, mailer, basic_logger)
 
 def get_register_arrival_usecase(
         product_repository: ProductRepository = Depends(get_product_repository)

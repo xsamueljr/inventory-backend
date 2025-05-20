@@ -6,12 +6,14 @@ from emails.domain.emailer import Emailer
 from emails.domain.stock_warning import StockWarningEmail
 from products.domain.exceptions.product_not_found import ProductNotFoundException
 from products.domain.product_repository import ProductRepository
+from shared.domain.logger import Logger
 
 
 @dataclass(frozen=True)
 class SaleDTO:
     product_id: str
     amount: int
+    delivery_note_id: str
 
     def __post_init__(self) -> None:
         if self.amount <= 0:
@@ -20,9 +22,10 @@ class SaleDTO:
 
 class RegisterSaleUsecase:
 
-    def __init__(self, repo: ProductRepository, mailer: Emailer) -> None:
+    def __init__(self, repo: ProductRepository, mailer: Emailer, logger: Logger) -> None:
         self.__repo = repo
         self.__mailer = mailer
+        self.__logger = logger
     
     def run(self, user: LoggedUserInfo, input: SaleDTO) -> None:
         product = self.__repo.get_by_id(input.product_id)
@@ -33,10 +36,14 @@ class RegisterSaleUsecase:
         product.stock = new_stock
         self.__repo.update(product)
 
-        self.__mailer.send(Email(
+        mail = Email(
             subject="Venta registrada",
-            body=f"{user.name} ha vendido {input.amount} unidad/es de {product.name}"
-        )) # TODO: a lo mejor esto genera demasiados correos
+            body=f"{user.name} ha vendido {input.amount} unidad/es de {product.name}\n"
+            f"Albarán: {input.delivery_note_id}"
+        )
+        self.__mailer.send(mail)
+        self.__logger.info(mail.body)
 
         if new_stock <= 1:
             self.__mailer.send(StockWarningEmail(product))
+            self.__logger.info(f"Stock de {product.name} bajo. Correo enviado")
