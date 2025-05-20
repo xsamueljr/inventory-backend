@@ -14,7 +14,11 @@ class EnvConfig(BaseModel):
     GMAIL_PASSWORD: str
     BOSS_EMAIL_ADDRESS: EmailStr
     SEND_REAL_EMAILS: bool = Field(default=False)
-
+    AWS_ACCESS_KEY_ID: str
+    AWS_SECRET_ACCESS_KEY: str
+    AWS_DEFAULT_REGION: str
+    DD_USER_TABLE_NAME: str
+    DD_PRODUCT_TABLE_NAME: str
     model_config = ConfigDict(frozen=True)
 
     @field_validator("SEND_REAL_EMAILS", mode="before")
