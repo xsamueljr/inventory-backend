@@ -23,12 +23,14 @@ class CreateProductRequest(BaseModel):
 
 class RegisterSaleRequest(BaseModel):
     product_id: str
+    delivery_note_id: str
     amount: int = Field(gt=0)
 
     def map_to_dto(self) -> SaleDTO:
         return SaleDTO(
             self.product_id,
-            self.amount
+            self.amount,
+            self.delivery_note_id
         )
 
 

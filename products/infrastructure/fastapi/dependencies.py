@@ -11,8 +11,8 @@ from products.application.get_by_id import GetProductByIdUsecase
 from products.application.register_arrival import RegisterArrivalUsecase
 from products.application.register_sell import RegisterSaleUsecase
 from products.domain.product_repository import ProductRepository
-from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 from products.infrastructure.sqlite_product_repository import SQLiteProductRepository
+from products.infrastructure.supabase_product_repository import SupabaseProductRepository
 from shared.infrastructure.env import env
 from shared.infrastructure.basic_logger import basic_logger
 
@@ -20,7 +20,7 @@ from shared.infrastructure.basic_logger import basic_logger
 def get_product_repository() -> ProductRepository:
     if env.SQLITE_PATH:
         return SQLiteProductRepository(env.SQLITE_PATH)
-    return InMemoryProductRepository()
+    return SupabaseProductRepository()
 
 
 def get_create_product_usecase(
@@ -33,7 +33,7 @@ def get_register_sale_usecase(
         product_repository: ProductRepository = Depends(get_product_repository),
         mailer: Emailer = Depends(get_mailer)
 ) -> RegisterSaleUsecase:
-    return RegisterSaleUsecase(product_repository, mailer)
+    return RegisterSaleUsecase(product_repository, mailer, basic_logger)
 
 def get_register_arrival_usecase(
         product_repository: ProductRepository = Depends(get_product_repository)
