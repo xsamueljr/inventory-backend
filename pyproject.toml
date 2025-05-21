@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "bcrypt>=4.3.0",
-    "boto3>=1.38.18",
     "fastapi[standard]>=0.115.12",
     "psycopg>=3.2.9",
     "pydantic>=2.11.3",
@@ -18,5 +17,4 @@ dependencies = [
 dev = [
     "faker>=37.1.0",
     "pytest>=8.3.5",
-    "types-boto3[dynamodb]>=1.38.19",
 ]
