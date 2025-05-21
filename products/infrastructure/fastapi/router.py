@@ -1,4 +1,3 @@
-from site import execsitecustomize
 from typing import List, TypedDict
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -15,6 +14,7 @@ from products.application.register_sell import RegisterSaleUsecase
 from products.domain.exceptions.product_not_found import ProductNotFoundException
 from products.infrastructure.fastapi.dependencies import get_all_products_usecase, get_create_product_usecase, get_delete_product_usecase, get_product_by_id_usecase, get_register_arrival_usecase, get_register_sale_usecase
 from products.infrastructure.fastapi.dtos import CreateProductRequest, RegisterArrivalRequest, RegisterSaleRequest
+from shared.infrastructure.fastapi.dtos import PaginationQueryParams
 
 
 class CreateProductResponse(TypedDict):
@@ -23,8 +23,11 @@ class CreateProductResponse(TypedDict):
 router = APIRouter(prefix="/api/products", tags=["products"])
 
 @router.get("")
-def get_all(usecase: GetAllProductsUsecase = Depends(get_all_products_usecase)) -> List[PublicProductInfo]:
-    return usecase.run()
+def get_all(
+    pagination: PaginationQueryParams = Depends(),
+    usecase: GetAllProductsUsecase = Depends(get_all_products_usecase)
+) -> List[PublicProductInfo]:
+    return usecase.run(pagination.limit, pagination.offset)
 
 
 @router.get("/{id}")
