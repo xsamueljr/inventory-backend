@@ -49,9 +49,9 @@ class SQLiteProductRepository(ProductRepository):
     def get_by_name(self, name: str) -> Product | None:
         return self.__get_one("name", name)
     
-    def get_all(self) -> List[Product]:
+    def get_all(self, limit: int, offset: int) -> List[Product]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM products")
+        cur.execute("SELECT * FROM products LIMIT ? OFFSET ?", (limit, offset))
         result = cur.fetchall()
         cur.close()
         return [self.__map_to_domain(row) for row in result]

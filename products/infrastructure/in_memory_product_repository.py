@@ -13,8 +13,8 @@ class InMemoryProductRepository(ProductRepository):
     def save(self, product: Product) -> None:
         self.__products[product.id] = product
     
-    def get_all(self) -> List[Product]:
-        return list(self.__products.values())
+    def get_all(self, limit: int, offset: int) -> List[Product]:
+        return list(self.__products.values())[offset:offset+limit]
     
     def get_by_id(self, id: str) -> Product | None:
         return self.__copy(self.__products.get(id))

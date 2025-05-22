@@ -73,9 +73,9 @@ class SupabaseProductRepository(ProductRepository):
             row = cur.fetchone()
             return self.__to_product(cast(Dict[str, Any], row)) if row else None
 
-    def get_all(self) -> list[Product]:
+    def get_all(self, limit: int, offset: int) -> list[Product]:
         with self.conn.cursor() as cur:
-            cur.execute("SELECT id, name, stock, arriving_date FROM products")
+            cur.execute("SELECT id, name, stock, arriving_date FROM products LIMIT %s OFFSET %s", (limit, offset))
             rows = cur.fetchall()
             return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
 
