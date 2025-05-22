@@ -17,7 +17,10 @@ class InMemoryProductRepository(ProductRepository):
         return list(self.__products.values())[offset:offset+limit]
     
     def get_by_id(self, id: str) -> Product | None:
-        return self.__copy(self.__products.get(id))
+        product = self.__products.get(id)
+        if not product:
+            return None
+        return self.__copy(product)
     
     def get_by_name(self, name: str) -> Product | None:
         for product in self.__products.values():
@@ -35,10 +38,16 @@ class InMemoryProductRepository(ProductRepository):
     def delete(self, id: str) -> None:
         self.__products.pop(id, None)
     
-    def __copy(self, product: Product | None) -> Product | None:
-        if not product:
-            return None
-        
+    def search_by_name(self, name: str) -> List[Product]:
+        search_term = name.lower()
+
+        return [
+            self.__copy(product)
+            for product in self.__products.values()
+            if search_term in product.name.lower()
+        ]
+    
+    def __copy(self, product: Product) -> Product:
         return Product(
             product.name,
             product.stock,

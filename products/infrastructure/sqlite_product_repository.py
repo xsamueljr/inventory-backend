@@ -49,6 +49,12 @@ class SQLiteProductRepository(ProductRepository):
     def get_by_name(self, name: str) -> Product | None:
         return self.__get_one("name", name)
     
+    def search_by_name(self, name: str) -> List[Product]:
+        cur = self.__conn.cursor()
+        cur.execute("SELECT * FROM products WHERE name LIKE %?%", name.lower())
+        results = cur.fetchall()
+        return [self.__map_to_domain(row) for row in results]
+    
     def get_all(self, limit: int, offset: int) -> List[Product]:
         cur = self.__conn.cursor()
         cur.execute("SELECT * FROM products LIMIT ? OFFSET ?", (limit, offset))

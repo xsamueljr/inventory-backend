@@ -11,8 +11,9 @@ from products.application.get_all import GetAllProductsUsecase
 from products.application.get_by_id import GetProductByIdUsecase
 from products.application.register_arrival import RegisterArrivalUsecase
 from products.application.register_sell import RegisterSaleUsecase
+from products.application.search_by_name import SearchProductsByNameUsecase
 from products.domain.exceptions.product_not_found import ProductNotFoundException
-from products.infrastructure.fastapi.dependencies import get_all_products_usecase, get_create_product_usecase, get_delete_product_usecase, get_product_by_id_usecase, get_register_arrival_usecase, get_register_sale_usecase
+from products.infrastructure.fastapi.dependencies import get_all_products_usecase, get_create_product_usecase, get_delete_product_usecase, get_product_by_id_usecase, get_register_arrival_usecase, get_register_sale_usecase, get_search_products_by_name_usecase
 from products.infrastructure.fastapi.dtos import CreateProductRequest, RegisterArrivalRequest, RegisterSaleRequest
 from shared.infrastructure.fastapi.dtos import PaginationQueryParams
 
@@ -23,10 +24,14 @@ class CreateProductResponse(TypedDict):
 router = APIRouter(prefix="/api/products", tags=["products"])
 
 @router.get("")
-def get_all(
+def get_products(
+    name: str | None = None,
     pagination: PaginationQueryParams = Depends(),
-    usecase: GetAllProductsUsecase = Depends(get_all_products_usecase)
+    usecase: GetAllProductsUsecase = Depends(get_all_products_usecase),
+    search_usecase: SearchProductsByNameUsecase = Depends(get_search_products_by_name_usecase)
 ) -> List[PublicProductInfo]:
+    if name:
+        return search_usecase.run(name)
     return usecase.run(pagination.limit, pagination.offset)
 
 

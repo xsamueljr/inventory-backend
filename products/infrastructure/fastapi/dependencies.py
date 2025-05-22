@@ -10,6 +10,7 @@ from products.application.get_all import GetAllProductsUsecase
 from products.application.get_by_id import GetProductByIdUsecase
 from products.application.register_arrival import RegisterArrivalUsecase
 from products.application.register_sell import RegisterSaleUsecase
+from products.application.search_by_name import SearchProductsByNameUsecase
 from products.domain.product_repository import ProductRepository
 from products.infrastructure.sqlite_product_repository import SQLiteProductRepository
 from products.infrastructure.supabase_product_repository import SupabaseProductRepository
@@ -48,3 +49,6 @@ def get_product_by_id_usecase(repo: ProductRepository = Depends(get_product_repo
 
 def get_delete_product_usecase(repo: ProductRepository = Depends(get_product_repository)) -> DeleteProductByIdUsecase:
     return DeleteProductByIdUsecase(basic_logger, repo)
+
+def get_search_products_by_name_usecase(repo: ProductRepository = Depends(get_product_repository)) -> SearchProductsByNameUsecase:
+    return SearchProductsByNameUsecase(repo)
