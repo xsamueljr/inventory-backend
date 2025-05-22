@@ -38,7 +38,8 @@ class MockProductRepository(ProductRepository):
     def get_by_name(self, name: str) -> Product | None:
         return self.__query(lambda product: product.name == name)
     
-    def get_all(self) -> List[Product]:
+    def get_all(self, limit: int, offset: int) -> List[Product]:
+        # purposefully not slicing the list
         return [product for product in self.__products]
     
     def update(self, product: Product) -> None:
@@ -51,6 +52,9 @@ class MockProductRepository(ProductRepository):
             if product.id == id:
                 self.__products.pop(i)
                 break
+    
+    def get_count(self) -> int:
+        return len(self.__products)
     
     def __query(self, criteria: Callable[[Product], bool]) -> Product | None:
         return next(filter(criteria, self.__products), None)
