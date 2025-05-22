@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 load_dotenv()
 
-TRUTHY_VALUES = {"true", "1", "yes", "y"}
+TRUTHY_VALUES = frozenset(["true", "1", "yes", "y"])
 
 class EnvConfig(BaseModel):
     JWT_SECRET_KEY: str

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from auth.infrastructure.fastapi.router import create_auth_router
+from auth.infrastructure.fastapi.router import router as auth_router
 from products.infrastructure.fastapi.router import router as products_router
 
 
@@ -16,7 +16,7 @@ def main():
         allow_headers=["*"]
     )
 
-    app.include_router(create_auth_router())
+    app.include_router(auth_router)
     app.include_router(products_router)
 
     uvicorn.run(app)

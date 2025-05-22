@@ -55,4 +55,4 @@ def test_cannot_register_sale_for_a_product_that_does_not_exist(sale_setup, mock
 @pytest.mark.parametrize("amount", (0, -1, -5, -99))
 def test_sale_with_zero_or_negative_amount_cannot_exist(amount) -> None:
     with pytest.raises(ValueError):
-        SaleDTOMother.create(product_id="irrelevant-id", amount=    amount)
+        SaleDTOMother.create(amount=amount)

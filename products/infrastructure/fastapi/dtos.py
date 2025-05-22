@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from products.application.dtos.create_product import CreateProductDTO
 from products.application.register_arrival import ArrivalDTO
@@ -37,9 +37,21 @@ class RegisterSaleRequest(BaseModel):
 class RegisterArrivalRequest(BaseModel):
     product_id: str
     amount: int = Field(gt=0)
+    arriving_date: Optional[date] = None
+
+    @model_validator(mode="after")
+    def validate_arrival_request(cls, values):
+        amount: int = values.get("amount")
+        arriving_date: Optional[date] = values.get("arriving_date")
+
+        if amount >= 0 and not arriving_date:
+            raise ValueError("Sólo puedes poner 0 en la cantidad si proporcionas una fecha de llegada")
+        
+        return values
 
     def map_to_dto(self) -> ArrivalDTO:
         return ArrivalDTO(
             self.product_id,
-            self.amount
+            self.amount,
+            self.arriving_date
         )

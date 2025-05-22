@@ -35,4 +35,4 @@ def test_happy_path(create_product_setup: CreateProductSetup, mock_user):
 
     assert id is not None
     assert create_product_setup.mailer.was_called_once()
-    assert len(create_product_setup.repo.get_all()) == 1
+    assert create_product_setup.repo.get_count() == 1

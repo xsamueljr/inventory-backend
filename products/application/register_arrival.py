@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from datetime import date
+from typing import Optional
 
 from auth.domain.logged_user_info import LoggedUserInfo
 from emails.domain.emailer import Emailer
@@ -11,13 +13,11 @@ from shared.domain.logger import Logger
 class ArrivalDTO:
     id: str
     amount: int
+    arriving_date: Optional[date] = None
 
     def __post_init__(self) -> None:
-        if self.amount == 0:
-            raise ValueError("¿Si no ha llegado nada qué haces?")
-        
-        if self.amount < 0:
-            raise ValueError("¿Seguro que no querías hacer una venta?")
+        if self.amount >= 0 and not self.arriving_date:
+            raise ValueError("Sólo puedes poner 0 en la cantidad si proporcionas una fecha de llegada")
 
 
 class RegisterArrivalUsecase:
@@ -35,6 +35,7 @@ class RegisterArrivalUsecase:
             raise ProductNotFoundException(input.id)
         
         product.stock += input.amount
+        product.arriving_date = input.arriving_date
         self.__repo.update(product)
         self.__logger.info(
             f"{user.name} ha registrado que acaban de llegar "
