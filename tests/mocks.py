@@ -56,6 +56,9 @@ class MockProductRepository(ProductRepository):
     def get_count(self) -> int:
         return len(self.__products)
     
+    def search_by_name(self, name: str) -> List[Product]:
+        return [product for product in self.__products if name.strip() in product.name.strip()]
+    
     def __query(self, criteria: Callable[[Product], bool]) -> Product | None:
         return next(filter(criteria, self.__products), None)
 
