@@ -93,7 +93,7 @@ class SupabaseProductRepository(ProductRepository):
                 FROM products 
                 WHERE name ILIKE %s
                 """,
-                (f"%{name}%",)
+                (f"%{name.strip()}%",)
             )
 
             rows = cur.fetchall()
