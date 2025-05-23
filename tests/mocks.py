@@ -43,9 +43,10 @@ class MockProductRepository(ProductRepository):
         return [product for product in self.__products]
     
     def update(self, product: Product) -> None:
-        raise NotImplementedError(
-            "Update method in mock product repository may not be needed right now (implement it otherwise)"
-        )
+        for i, p in enumerate(self.__products):
+            if p.id == product.id:
+                self.__products[i] = product
+                break
     
     def delete(self, id: str) -> None:
         for i, product in enumerate(self.__products):
