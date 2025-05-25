@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, cast
+from typing import Optional, Dict, Any, cast, List
 
 import psycopg
 from psycopg.rows import dict_row
@@ -83,6 +83,21 @@ class SupabaseProductRepository(ProductRepository):
         with self.conn.cursor() as cur:
             cur.execute("DELETE FROM products WHERE id = %s", (id,))
         self.conn.commit()
+
+    def search_by_name(self, name: str) -> List[Product]:
+        with self.conn.cursor() as cur:
+            
+            cur.execute(
+                """
+                SELECT id, name, stock, arriving_date 
+                FROM products 
+                WHERE name ILIKE %s
+                """,
+                (f"%{name.strip()}%",)
+            )
+
+            rows = cur.fetchall()
+            return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
 
     def __to_product(self, row: Dict[str, Any]) -> Product:
         return Product(

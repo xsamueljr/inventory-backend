@@ -7,7 +7,11 @@ from auth.domain.logged_user_info import LoggedUserInfo
 @pytest.fixture(scope="session", autouse=True)
 def run_around_tests():
     yield
-    os.unlink("test.db")
+    try:
+        os.unlink("test.db")
+    except FileNotFoundError:
+        # no need to clean db then
+        pass
 
 
 @pytest.fixture

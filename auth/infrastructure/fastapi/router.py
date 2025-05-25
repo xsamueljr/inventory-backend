@@ -31,8 +31,11 @@ registration_handler = normal_registration if env.ENABLE_REGISTER else disabled_
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
-router.add_api_route("/register", registration_handler, status_code=201)
-    
+router.add_api_route("/register", registration_handler, status_code=201, responses={
+    201: {"description": "User registered successfully"},
+    403: {"description": "Registration is disabled"}
+})
+
 @router.post("/login")
 def login(
     form: Annotated[OAuth2PasswordRequestForm, Depends()],

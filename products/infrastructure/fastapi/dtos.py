@@ -40,14 +40,11 @@ class RegisterArrivalRequest(BaseModel):
     arriving_date: Optional[date] = None
 
     @model_validator(mode="after")
-    def validate_arrival_request(cls, values):
-        amount: int = values.get("amount")
-        arriving_date: Optional[date] = values.get("arriving_date")
-
-        if amount >= 0 and not arriving_date:
+    def validate_arrival_request(cls, model: "RegisterArrivalRequest"):
+        if model.amount <= 0 and not model.arriving_date:
             raise ValueError("Sólo puedes poner 0 en la cantidad si proporcionas una fecha de llegada")
         
-        return values
+        return model
 
     def map_to_dto(self) -> ArrivalDTO:
         return ArrivalDTO(

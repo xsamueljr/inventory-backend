@@ -16,7 +16,7 @@ class ArrivalDTO:
     arriving_date: Optional[date] = None
 
     def __post_init__(self) -> None:
-        if self.amount >= 0 and not self.arriving_date:
+        if self.amount <= 0 and not self.arriving_date:
             raise ValueError("Sólo puedes poner 0 en la cantidad si proporcionas una fecha de llegada")
 
 
