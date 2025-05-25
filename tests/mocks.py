@@ -1,5 +1,5 @@
 from typing import Callable, List
-import pytest
+
 from emails.domain.email import Email
 from emails.domain.emailer import Emailer
 from products.domain.product import Product
@@ -70,13 +70,3 @@ class MockLogger(Logger):
     def warning(self, message: str) -> None: ...
 
     def error(self, message: str) -> None: ...
-
-
-@pytest.fixture
-def mock_mailer() -> MockMailer:
-    return MockMailer()
-
-
-@pytest.fixture
-def mock_product_repository() -> MockProductRepository:
-    return MockProductRepository()

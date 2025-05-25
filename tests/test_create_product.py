@@ -15,10 +15,12 @@ class CreateProductSetup:
 
 
 @pytest.fixture
-def create_product_setup(mock_mailer, mock_product_repository) -> CreateProductSetup:
-    usecase = CreateProductUseCase(MockLogger(), mock_product_repository, mock_mailer)
+def create_product_setup() -> CreateProductSetup:
+    repo = MockProductRepository()
+    mailer = MockMailer()
+    usecase = CreateProductUseCase(MockLogger(), repo, mailer)
 
-    return CreateProductSetup(usecase, mock_product_repository, mock_mailer)
+    return CreateProductSetup(usecase, repo, mailer)
 
 
 def test_happy_path(create_product_setup: CreateProductSetup, mock_user):
