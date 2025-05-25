@@ -9,4 +9,7 @@ class GetAllProductsUsecase:
         self.__repo = product_repository
 
     def run(self, limit: int, offset: int) -> List[PublicProductInfo]:
-        return [PublicProductInfo.from_domain(product) for product in self.__repo.get_all(limit, offset)]
+        return [
+            PublicProductInfo.from_domain(product)
+            for product in self.__repo.get_all(limit, offset)
+        ]

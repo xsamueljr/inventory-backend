@@ -10,10 +10,6 @@ class CreateProductDTO:
     name: str
     stock: int = 0
     arriving_date: Optional[date] = None
-    
+
     def to_domain(self) -> Product:
-        return Product(
-            self.name,
-            self.stock,
-            self.arriving_date
-        )
+        return Product(self.name, self.stock, self.arriving_date)

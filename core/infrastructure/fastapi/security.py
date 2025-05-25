@@ -12,10 +12,11 @@ from users.infrastructure.fastapi.dependencies import get_user_repository
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
+
 def get_current_user(
-        token: Annotated[str, Depends(oauth2_scheme)],
-        user_repository: UserRepository = Depends(get_user_repository),
-        token_manager: TokenManager = Depends(get_token_manager)
+    token: Annotated[str, Depends(oauth2_scheme)],
+    user_repository: UserRepository = Depends(get_user_repository),
+    token_manager: TokenManager = Depends(get_token_manager),
 ) -> LoggedUserInfo:
     credentials_exception = HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -24,9 +25,9 @@ def get_current_user(
         user_id = token_manager.decrypt(auth_token)
     except InvalidTokenException:
         raise credentials_exception
-    
+
     user = user_repository.get_by_id(user_id)
     if not user:
         raise credentials_exception
-    
+
     return LoggedUserInfo(user.id, user.username)

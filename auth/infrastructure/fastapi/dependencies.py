@@ -21,24 +21,19 @@ def get_token_manager() -> TokenManager:
 def get_password_hasher() -> PasswordHasher:
     return BcryptPasswordHasher()
 
+
 @lru_cache
 def get_register_usecase(
     user_repository: UserRepository = Depends(get_user_repository),
-    hasher: PasswordHasher = Depends(get_password_hasher)
+    hasher: PasswordHasher = Depends(get_password_hasher),
 ) -> RegisterUserUsecase:
-    return RegisterUserUsecase(
-        user_repository,
-        hasher
-    )
+    return RegisterUserUsecase(user_repository, hasher)
+
 
 @lru_cache
 def get_login_usecase(
     user_repository: UserRepository = Depends(get_user_repository),
     hasher: PasswordHasher = Depends(get_password_hasher),
-    token_manager: TokenManager = Depends(get_token_manager)
+    token_manager: TokenManager = Depends(get_token_manager),
 ) -> LoginUserUsecase:
-    return LoginUserUsecase(
-        user_repository,
-        hasher,
-        token_manager
-    )
+    return LoginUserUsecase(user_repository, hasher, token_manager)

@@ -5,14 +5,14 @@ from psycopg.rows import dict_row
 
 from users.domain.user import User
 from users.domain.user_repository import UserRepository
-from shared.infrastructure.env import env
+from shared.infrastructure.env import ENV
 
 
 class SupabaseUserRepository(UserRepository):
     def __init__(self) -> None:
-        conninfo = env.SUPABASE_PG_CONN
+        conninfo = ENV.SUPABASE_PG_CONN
         self.conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        self.conn.execute(f"SET search_path TO \"{env.PG_SCHEMA}\"") # type: ignore
+        self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
 
     def save(self, user: User) -> None:
         with self.conn.cursor() as cur:
@@ -21,7 +21,7 @@ class SupabaseUserRepository(UserRepository):
                 INSERT INTO app_users (id, username, password, shop_name)
                 VALUES (%s, %s, %s, %s)
                 """,
-                (user.id, user.username, user.password, user.shop_name)
+                (user.id, user.username, user.password, user.shop_name),
             )
         self.conn.commit()
 
@@ -31,7 +31,7 @@ class SupabaseUserRepository(UserRepository):
                 """
                 SELECT id, username, password, shop_name FROM app_users WHERE id = %s
                 """,
-                (id,)
+                (id,),
             )
             row = cur.fetchone()
             return self.__to_user(cast(Dict[str, Any], row)) if row else None
@@ -42,7 +42,7 @@ class SupabaseUserRepository(UserRepository):
                 """
                 SELECT id, username, password, shop_name FROM app_users WHERE username = %s
                 """,
-                (username,)
+                (username,),
             )
             row = cur.fetchone()
             return self.__to_user(cast(Dict[str, Any], row)) if row else None
@@ -52,5 +52,5 @@ class SupabaseUserRepository(UserRepository):
             id=str(row["id"]),
             username=row["username"],
             password=row["password"],
-            shop_name=row["shop_name"]
+            shop_name=row["shop_name"],
         )
