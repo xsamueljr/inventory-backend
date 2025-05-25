@@ -8,6 +8,7 @@ load_dotenv()
 
 TRUTHY_VALUES = frozenset(["true", "1", "yes", "y"])
 
+
 class EnvConfig(BaseModel):
     JWT_SECRET_KEY: str
     SQLITE_PATH: Optional[str] = Field(default=None)
@@ -26,10 +27,11 @@ class EnvConfig(BaseModel):
     @classmethod
     def parse_send_real_emails(cls, value: Optional[str]) -> bool:
         return value in TRUTHY_VALUES
-    
+
     @field_validator("ENABLE_REGISTER", mode="before")
     @classmethod
     def parse_enable_register(cls, value: Optional[str]) -> bool:
         return value in TRUTHY_VALUES
 
-env = EnvConfig(**os.environ) # type: ignore
+
+ENV = EnvConfig(**os.environ)  # type: ignore

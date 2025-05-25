@@ -1,10 +1,7 @@
-from uuid import uuid4
-
 from products.application.register_sell import SaleDTO
 
 
 class SaleDTOMother:
-    
     @staticmethod
     def create(
         *,

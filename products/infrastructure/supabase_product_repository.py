@@ -5,14 +5,14 @@ from psycopg.rows import dict_row
 
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
-from shared.infrastructure.env import env
+from shared.infrastructure.env import ENV
 
 
 class SupabaseProductRepository(ProductRepository):
     def __init__(self) -> None:
-        conninfo = env.SUPABASE_PG_CONN
+        conninfo = ENV.SUPABASE_PG_CONN
         self.conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        self.conn.execute(f"SET search_path TO \"{env.PG_SCHEMA}\"") # type: ignore
+        self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
 
     def save(self, product: Product) -> None:
         with self.conn.cursor() as cur:
@@ -30,8 +30,8 @@ class SupabaseProductRepository(ProductRepository):
                     product.name,
                     product.stock,
                     product.arriving_date,
-                    product.id
-                )
+                    product.id,
+                ),
             )
         self.conn.commit()
 
@@ -46,12 +46,7 @@ class SupabaseProductRepository(ProductRepository):
                     arriving_date = %s
                 WHERE id = %s
                 """,
-                (
-                    product.name,
-                    product.stock,
-                    product.arriving_date,
-                    product.id
-                )
+                (product.name, product.stock, product.arriving_date, product.id),
             )
         self.conn.commit()
 
@@ -59,7 +54,7 @@ class SupabaseProductRepository(ProductRepository):
         with self.conn.cursor() as cur:
             cur.execute(
                 "SELECT id, name, stock, arriving_date FROM products WHERE id = %s",
-                (id,)
+                (id,),
             )
             row = cur.fetchone()
             return self.__to_product(cast(Dict[str, Any], row)) if row else None
@@ -68,14 +63,17 @@ class SupabaseProductRepository(ProductRepository):
         with self.conn.cursor() as cur:
             cur.execute(
                 "SELECT id, name, stock, arriving_date FROM products WHERE name = %s",
-                (name,)
+                (name,),
             )
             row = cur.fetchone()
             return self.__to_product(cast(Dict[str, Any], row)) if row else None
 
     def get_all(self, limit: int, offset: int) -> list[Product]:
         with self.conn.cursor() as cur:
-            cur.execute("SELECT id, name, stock, arriving_date FROM products LIMIT %s OFFSET %s", (limit, offset))
+            cur.execute(
+                "SELECT id, name, stock, arriving_date FROM products LIMIT %s OFFSET %s",
+                (limit, offset),
+            )
             rows = cur.fetchall()
             return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
 
@@ -86,14 +84,13 @@ class SupabaseProductRepository(ProductRepository):
 
     def search_by_name(self, name: str) -> List[Product]:
         with self.conn.cursor() as cur:
-            
             cur.execute(
                 """
                 SELECT id, name, stock, arriving_date 
                 FROM products 
                 WHERE name ILIKE %s
                 """,
-                (f"%{name.strip()}%",)
+                (f"%{name.strip()}%",),
             )
 
             rows = cur.fetchall()
@@ -104,5 +101,5 @@ class SupabaseProductRepository(ProductRepository):
             id=row["id"],
             name=row["name"],
             stock=row["stock"],
-            arriving_date=row["arriving_date"]
+            arriving_date=row["arriving_date"],
         )

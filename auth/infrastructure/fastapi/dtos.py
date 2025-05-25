@@ -6,6 +6,7 @@ from auth.application.dtos.login_attempt import LoginAttemptDTO
 name_field = Field(min_length=2, max_length=20)
 password_field = Field(min_length=4, max_length=16)
 
+
 class LoginRequest(BaseModel):
     username: str = name_field
     password: str = password_field

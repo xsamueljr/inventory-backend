@@ -2,12 +2,9 @@ from dataclasses import dataclass
 
 import pytest
 
-from tests.mocks import MockLogger, mock_mailer, MockMailer, mock_product_repository, MockProductRepository
-from emails.domain.email import Email
-from emails.domain.emailer import Emailer
+from tests.mocks import MockLogger, MockMailer, MockProductRepository
 from products.application.create_product import CreateProductUseCase
 from products.application.dtos.create_product import CreateProductDTO
-from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 
 
 @dataclass
@@ -19,11 +16,7 @@ class CreateProductSetup:
 
 @pytest.fixture
 def create_product_setup(mock_mailer, mock_product_repository) -> CreateProductSetup:
-    usecase = CreateProductUseCase(
-        MockLogger(),
-        mock_product_repository,
-        mock_mailer
-    )
+    usecase = CreateProductUseCase(MockLogger(), mock_product_repository, mock_mailer)
 
     return CreateProductSetup(usecase, mock_product_repository, mock_mailer)
 

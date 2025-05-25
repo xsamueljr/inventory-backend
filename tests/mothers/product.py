@@ -4,14 +4,13 @@ from products.domain.product import Product
 
 
 class ProductMother:
-
     @staticmethod
     def create(
-            *,
-            model: str | None = None,
-            stock: int | None = None,
-            arriving_date: date | None = None,
-            id: str | None = None
+        *,
+        model: str | None = None,
+        stock: int | None = None,
+        arriving_date: date | None = None,
+        id: str | None = None,
     ) -> Product:
         faker = Faker()
 
@@ -19,5 +18,5 @@ class ProductMother:
             model or faker.name(),
             stock or faker.random_number(),
             arriving_date,
-            id or faker.uuid4()
+            id or faker.uuid4(),
         )

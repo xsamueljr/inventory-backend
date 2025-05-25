@@ -7,9 +7,7 @@ from products.application.dtos.public_product import PublicProductInfo
 from products.application.get_by_id import GetProductByIdUsecase
 from products.domain.exceptions.product_not_found import ProductNotFoundException
 from products.domain.product_repository import ProductRepository
-from products.infrastructure.in_memory_product_repository import InMemoryProductRepository
 from products.infrastructure.sqlite_product_repository import SQLiteProductRepository
-from shared.infrastructure.sqlite_connection import get_connection
 from tests.mothers.product import ProductMother
 
 

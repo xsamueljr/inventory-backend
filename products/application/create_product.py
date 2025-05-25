@@ -8,15 +8,12 @@ from products.domain.product_repository import ProductRepository
 
 class CreateProductUseCase:
     def __init__(
-            self,
-            logger: Logger,
-            repository: ProductRepository,
-            mailer: Emailer
+        self, logger: Logger, repository: ProductRepository, mailer: Emailer
     ) -> None:
         self.__logger = logger
         self.__repository = repository
         self.__mailer = mailer
-    
+
     def run(self, user: LoggedUserInfo, input: CreateProductDTO) -> str:
         product = input.to_domain()
         self.__repository.save(product)

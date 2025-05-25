@@ -5,11 +5,7 @@ from shared.domain.logger import Logger
 
 
 class DeleteProductByIdUsecase:
-    def __init__(
-            self,
-            logger: Logger,
-            product_repository: ProductRepository
-    ) -> None:
+    def __init__(self, logger: Logger, product_repository: ProductRepository) -> None:
         self.__logger = logger
         self.__repo = product_repository
 
