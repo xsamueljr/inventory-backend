@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 from dotenv import load_dotenv
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl, field_validator
 
 load_dotenv()
 
@@ -18,6 +18,7 @@ class EnvConfig(BaseModel):
     SEND_REAL_EMAILS: bool = Field(default=False)
     SUPABASE_PG_CONN: str
     PG_SCHEMA: str
+    FRONTEND_URL: HttpUrl
 
     ENABLE_REGISTER: bool = Field(default=False)
 
