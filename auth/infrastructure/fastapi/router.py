@@ -35,6 +35,7 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 router.add_api_route(
     "/register",
     registration_handler,
+    methods=["POST"],
     status_code=201,
     responses={
         201: {"description": "User registered successfully"},
