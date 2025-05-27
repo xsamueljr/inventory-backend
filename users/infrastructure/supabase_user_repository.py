@@ -1,4 +1,4 @@
-from typing import LiteralString, Optional, Dict, Any, Tuple, cast
+from typing import Optional, Dict, Any, cast
 
 import psycopg
 from psycopg.rows import dict_row
@@ -62,7 +62,7 @@ class SupabaseUserRepository(UserRepository):
     def __cursor(self) -> psycopg.Cursor:
         """Helper method that provides a cursor but handles disconnection first"""
         try:
-            self.conn.execute("SELECT 1") # ping
+            self.conn.execute("SELECT 1")  # ping
         except psycopg.OperationalError:
             self.conn = self.__connect()
 

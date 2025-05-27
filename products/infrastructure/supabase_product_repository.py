@@ -103,7 +103,7 @@ class SupabaseProductRepository(ProductRepository):
             stock=row["stock"],
             arriving_date=row["arriving_date"],
         )
-    
+
     def __connect(self) -> psycopg.Connection:
         conninfo = ENV.SUPABASE_PG_CONN
         conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
@@ -113,7 +113,7 @@ class SupabaseProductRepository(ProductRepository):
     def __cursor(self) -> psycopg.Cursor:
         """Helper method that provides a cursor but handles disconnection first"""
         try:
-            self.conn.execute("SELECT 1") # ping
+            self.conn.execute("SELECT 1")  # ping
         except psycopg.OperationalError:
             self.conn = self.__connect()
 
