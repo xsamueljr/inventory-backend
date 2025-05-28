@@ -6,7 +6,7 @@ class ProductCreatedEmail(Email):
     def __init__(self, user_name: str, product: Product) -> None:
         subject = "Se ha creado un producto"
         arrival_field = (
-            f"Fecha de llegada: {product.arriving_date}"
+            f"- Fecha de llegada: {product.arriving_date}"
             if product.arriving_date
             else ""
         )
