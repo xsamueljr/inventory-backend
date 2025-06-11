@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from auth.domain.auth_token import AuthToken
 from auth.domain.exceptions.invalid_token import InvalidTokenException
+from auth.domain.exceptions.expired_token import ExpiredTokenException
 from auth.domain.logged_user_info import LoggedUserInfo
 from auth.domain.token_manager import TokenManager
 from auth.infrastructure.fastapi.dependencies import get_token_manager
@@ -23,7 +24,7 @@ def get_current_user(
     auth_token = AuthToken(token)
     try:
         user_id = token_manager.decrypt(auth_token)
-    except InvalidTokenException:
+    except (InvalidTokenException, ExpiredTokenException):
         raise credentials_exception
 
     user = user_repository.get_by_id(user_id)
