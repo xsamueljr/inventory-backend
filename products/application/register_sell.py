@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+from uuid import uuid4
 
+from activity.domain.record import Record, RecordKind
+from activity.domain.record_repository import RecordRepository
 from auth.domain.logged_user_info import LoggedUserInfo
 from emails.domain.email import Email
 from emails.domain.emailer import Emailer
@@ -24,20 +27,34 @@ class SaleDTO:
 
 class RegisterSaleUsecase:
     def __init__(
-        self, repo: ProductRepository, mailer: Emailer, logger: Logger
+        self,
+        product_repo: ProductRepository,
+        record_repo: RecordRepository,
+        mailer: Emailer,
+        logger: Logger
     ) -> None:
-        self.__repo = repo
+        self.__product_repo = product_repo
+        self.__record_repo = record_repo
         self.__mailer = mailer
         self.__logger = logger
 
     def run(self, user: LoggedUserInfo, input: SaleDTO) -> None:
-        product = self.__repo.get_by_id(input.product_id)
+        product = self.__product_repo.get_by_id(input.product_id)
         if not product:
             raise ProductNotFoundException(input.product_id)
 
         new_stock = product.stock - input.amount
         product.stock = new_stock
-        self.__repo.update(product)
+        self.__product_repo.update(product)
+
+        record = Record(
+            id=str(uuid4()),
+            kind=RecordKind.PRODUCT_SOLD,
+            user_id=user.id,
+            product_id=product.id,
+            amount=input.amount
+        )
+        self.__record_repo.save(record)
 
         mail = Email(
             subject="Venta registrada",
