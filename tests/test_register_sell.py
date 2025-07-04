@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from activity.infrastructure.in_memory_record_repository import InMemoryRecordRepository
 import pytest
 
 from products.application.register_sell import RegisterSaleUsecase
@@ -15,29 +16,32 @@ from tests.mothers.sale import SaleDTOMother
 @dataclass
 class RegisterSaleSetup:
     usecase: RegisterSaleUsecase
-    repo: InMemoryProductRepository
+    product_repo: InMemoryProductRepository
+    record_repo: InMemoryRecordRepository
     mailer: MockMailer
 
 
 @pytest.fixture
 def sale_setup() -> RegisterSaleSetup:
-    repo = InMemoryProductRepository()
+    product_repo = InMemoryProductRepository()
+    record_repo = InMemoryRecordRepository()
+
     mailer = MockMailer()
 
-    usecase = RegisterSaleUsecase(repo, mailer, MockLogger())
+    usecase = RegisterSaleUsecase(product_repo, record_repo, mailer, MockLogger())
 
-    return RegisterSaleSetup(usecase, repo, mailer)
+    return RegisterSaleSetup(usecase, product_repo, record_repo, mailer)
 
 
 def test_happy_path(sale_setup, mock_user) -> None:
     product = ProductMother.create(stock=5)
-    sale_setup.repo.save(product)
+    sale_setup.product_repo.save(product)
 
     sale_setup.usecase.run(
         mock_user, SaleDTOMother.create(product_id=product.id, amount=3)
     )
 
-    after_sale_product = sale_setup.repo.get_by_id(product.id)
+    after_sale_product = sale_setup.product_repo.get_by_id(product.id)
 
     assert after_sale_product.stock == 2
     assert sale_setup.mailer.was_called_once()
@@ -47,7 +51,7 @@ def test_if_stock_left_zero_or_negative_then_another_mail_is_sent(
     sale_setup, mock_user
 ) -> None:
     product = ProductMother.create(stock=2)
-    sale_setup.repo.save(product)
+    sale_setup.product_repo.save(product)
 
     sale_setup.usecase.run(
         mock_user, SaleDTOMother.create(product_id=product.id, amount=3)
