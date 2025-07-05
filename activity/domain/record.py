@@ -5,6 +5,7 @@ from enum import Enum
 
 class RecordKind(Enum):
     PRODUCT_CREATED = "product-created"
+    PRODUCT_ARRIVED = "product-arrived"
     PRODUCT_DELETED = "product-deleted"
     PRODUCT_SOLD = "product-sold"
 
