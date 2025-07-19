@@ -13,7 +13,7 @@ from products.application.register_arrival import RegisterArrivalUsecase
 from products.application.register_sell import RegisterSaleUsecase
 from products.application.search_by_name import SearchProductsByNameUsecase
 from products.domain.exceptions.product_not_found import ProductNotFoundException
-from products.infrastructure.fastapi.dependencies import (
+from products.infrastructure.fastapi.dependencies.usecases import (
     get_all_products_usecase,
     get_create_product_usecase,
     get_delete_product_usecase,
