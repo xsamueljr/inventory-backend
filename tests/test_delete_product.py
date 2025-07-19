@@ -29,12 +29,16 @@ def delete_product_setup() -> DeleteProductSetup:
     return DeleteProductSetup(product_repo, record_repo, usecase)
 
 
-def test_deleting_product_that_does_not_exist_fails(delete_product_setup: DeleteProductSetup, mock_user: LoggedUserInfo):
+def test_deleting_product_that_does_not_exist_fails(
+    delete_product_setup: DeleteProductSetup, mock_user: LoggedUserInfo
+):
     with pytest.raises(ProductNotFoundException):
         delete_product_setup.usecase.run(mock_user, "irrelevant-id")
 
 
-def test_product_is_not_found_after_deleting_it(delete_product_setup: DeleteProductSetup, mock_user: LoggedUserInfo):
+def test_product_is_not_found_after_deleting_it(
+    delete_product_setup: DeleteProductSetup, mock_user: LoggedUserInfo
+):
     product = ProductMother.create()
     delete_product_setup.product_repo.save(product)
 
@@ -45,7 +49,9 @@ def test_product_is_not_found_after_deleting_it(delete_product_setup: DeleteProd
     assert after_delete is None
 
 
-def test_deleting_a_product_successfully_creates_a_record(delete_product_setup: DeleteProductSetup, mock_user: LoggedUserInfo):
+def test_deleting_a_product_successfully_creates_a_record(
+    delete_product_setup: DeleteProductSetup, mock_user: LoggedUserInfo
+):
     product = ProductMother.create()
     delete_product_setup.product_repo.save(product)
 
