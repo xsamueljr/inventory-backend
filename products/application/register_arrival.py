@@ -29,7 +29,7 @@ class RegisterArrivalUsecase:
         self,
         logger: Logger,
         product_repo: ProductRepository,
-        record_repo: RecordRepository
+        record_repo: RecordRepository,
     ) -> None:
         self.__logger = logger
         self.__product_repo = product_repo
@@ -49,7 +49,7 @@ class RegisterArrivalUsecase:
             kind=RecordKind.PRODUCT_ARRIVED,
             user_id=user.id,
             product_id=product.id,
-            amount=input.amount
+            amount=input.amount,
         )
         self.__record_repo.save(record)
 

@@ -5,7 +5,6 @@ from activity.domain.record import Record
 
 
 class RecordRepository(ABC):
-
     @abstractmethod
     def save(self, record: Record) -> None: ...
 
