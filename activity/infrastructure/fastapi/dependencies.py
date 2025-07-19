@@ -22,7 +22,6 @@ def get_record_repository() -> RecordRepository:
 
 def get_own_records_usecase(
     record_repository: RecordRepository = Depends(get_record_repository),
-    product_repository: ProductRepository = Depends(get_product_repository),
-    user_repository: UserRepository = Depends(get_user_repository),
+    product_repository: ProductRepository = Depends(get_product_repository)
 ) -> GetOwnRecordsUseCase:
-    return GetOwnRecordsUseCase(record_repository, product_repository, user_repository)
+    return GetOwnRecordsUseCase(record_repository, product_repository)

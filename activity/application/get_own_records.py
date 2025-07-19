@@ -1,23 +1,21 @@
 from typing import Dict, List
+
 from activity.application.dtos.public_record_info import PublicRecordInfo
 from activity.domain.record_repository import RecordRepository
 from auth.domain.logged_user_info import LoggedUserInfo
 from products.domain.product_repository import ProductRepository
 from products.domain.product import Product
 from products.domain.exceptions.product_not_found import ProductNotFoundException
-from users.domain.user_repository import UserRepository
 
 
 class GetOwnRecordsUseCase:
     def __init__(
         self,
         record_repo: RecordRepository,
-        product_repo: ProductRepository,
-        user_repo: UserRepository,
+        product_repo: ProductRepository
     ) -> None:
         self.__record_repo = record_repo
         self.__product_repo = product_repo
-        self.__user_repo = user_repo
 
     def run(
         self, user: LoggedUserInfo, limit: int, offset: int
