@@ -38,3 +38,15 @@ def test_product_is_not_found_after_deleting_it(delete_product_setup, mock_user)
     after_delete = delete_product_setup.repo.get_by_id(product.id)
 
     assert after_delete is None
+
+
+def test_deleting_a_product_successfully_creates_a_record(delete_product_setup, mock_user):
+    product = ProductMother.create()
+    delete_product_setup.repo.save(product)
+
+    delete_product_setup.usecase.run(mock_user, product.id)
+
+    records = delete_product_setup.repo.get_all(limit=10, offset=0)
+
+    assert len(records) == 1
+    assert records[0].kind == RecordKind.PRODUCT_DELETED
