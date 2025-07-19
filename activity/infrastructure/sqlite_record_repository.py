@@ -5,7 +5,6 @@ from shared.infrastructure.sqlite_connection import get_connection
 
 
 class SQLiteRecordRepository(RecordRepository):
-    
     def __init__(self, db_path: str | None = None) -> None:
         conn = get_connection(db_path) if db_path else get_connection()
 
@@ -22,12 +21,19 @@ class SQLiteRecordRepository(RecordRepository):
         conn.commit()
 
         self.__conn = conn
-    
+
     def save(self, record: Record) -> None:
         cur = self.__conn.cursor()
         cur.execute(
             "INSERT INTO records (id, kind, user_id, product_id, amount, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-            (record.id, record.kind.value, record.user_id, record.product_id, record.amount, record.created_at)
+            (
+                record.id,
+                record.kind.value,
+                record.user_id,
+                record.product_id,
+                record.amount,
+                record.created_at,
+            ),
         )
 
         self.__conn.commit()
@@ -39,14 +45,17 @@ class SQLiteRecordRepository(RecordRepository):
         result = cur.fetchall()
         cur.close()
         return [self.__map_to_domain(row) for row in result]
-    
+
     def get_by_user_id(self, id: str, limit: int, offset: int) -> List[Record]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM records WHERE user_id = ? LIMIT ? OFFSET ?", (id, limit, offset))
+        cur.execute(
+            "SELECT * FROM records WHERE user_id = ? LIMIT ? OFFSET ?",
+            (id, limit, offset),
+        )
         result = cur.fetchall()
         cur.close()
         return [self.__map_to_domain(row) for row in result]
-    
+
     def __map_to_domain(self, row: Any) -> Record:
         return Record(
             id=row[0],
@@ -54,5 +63,5 @@ class SQLiteRecordRepository(RecordRepository):
             user_id=row[2],
             product_id=row[3],
             amount=row[4],
-            created_at=row[5]
+            created_at=row[5],
         )

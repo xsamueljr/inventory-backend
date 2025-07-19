@@ -10,9 +10,7 @@ from products.domain.exceptions.product_not_found import ProductNotFoundExceptio
 
 class GetOwnRecordsUseCase:
     def __init__(
-        self,
-        record_repo: RecordRepository,
-        product_repo: ProductRepository
+        self, record_repo: RecordRepository, product_repo: ProductRepository
     ) -> None:
         self.__record_repo = record_repo
         self.__product_repo = product_repo
