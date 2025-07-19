@@ -31,7 +31,7 @@ class RegisterSaleUsecase:
         product_repo: ProductRepository,
         record_repo: RecordRepository,
         mailer: Emailer,
-        logger: Logger
+        logger: Logger,
     ) -> None:
         self.__product_repo = product_repo
         self.__record_repo = record_repo
@@ -52,7 +52,7 @@ class RegisterSaleUsecase:
             kind=RecordKind.PRODUCT_SOLD,
             user_id=user.id,
             product_id=product.id,
-            amount=input.amount
+            amount=input.amount,
         )
         self.__record_repo.save(record)
 
