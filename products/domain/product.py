@@ -11,3 +11,6 @@ class Product:
     arriving_date: Optional[date] = None
 
     id: str = field(default_factory=lambda: str(uuid4()))
+
+    def has_low_stock(self) -> bool:
+        return self.stock <= 1

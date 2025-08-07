@@ -43,8 +43,7 @@ class RegisterSaleUsecase:
         if not product:
             raise ProductNotFoundException(input.product_id)
 
-        new_stock = product.stock - input.amount
-        product.stock = new_stock
+        product.stock -= input.amount
         self.__product_repo.update(product)
 
         record = Record(
@@ -64,6 +63,6 @@ class RegisterSaleUsecase:
         self.__mailer.send(mail)
         self.__logger.info(mail.body)
 
-        if new_stock <= 1:
+        if product.has_low_stock():
             self.__mailer.send(StockWarningEmail(product))
             self.__logger.info(f"Stock de {product.name} bajo. Correo enviado")
