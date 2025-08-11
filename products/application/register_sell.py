@@ -52,6 +52,7 @@ class RegisterSaleUsecase:
             user_id=user.id,
             product_id=product.id,
             amount=input.amount,
+            delivery_note_id=input.delivery_note_id
         )
         self.__record_repo.save(record)
 
