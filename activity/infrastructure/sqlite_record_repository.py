@@ -43,7 +43,10 @@ class SQLiteRecordRepository(RecordRepository):
 
     def get_all(self, limit: int, offset: int) -> List[Record]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM records ORDER BY created_at DESC LIMIT ? OFFSET ?", (limit, offset))
+        cur.execute(
+            "SELECT * FROM records ORDER BY created_at DESC LIMIT ? OFFSET ?",
+            (limit, offset),
+        )
         result = cur.fetchall()
         cur.close()
         return [self.__map_to_domain(row) for row in result]

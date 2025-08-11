@@ -5,6 +5,7 @@ from enum import Enum
 
 MADRID_TZ = ZoneInfo("Europe/Madrid")
 
+
 class RecordKind(Enum):
     PRODUCT_CREATED = "product-created"
     PRODUCT_ARRIVED = "product-arrived"

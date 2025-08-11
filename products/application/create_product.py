@@ -11,7 +11,11 @@ from products.domain.product_repository import ProductRepository
 
 class CreateProductUseCase:
     def __init__(
-        self, logger: Logger, product_repo: ProductRepository, record_repo: RecordRepository, mailer: Emailer
+        self,
+        logger: Logger,
+        product_repo: ProductRepository,
+        record_repo: RecordRepository,
+        mailer: Emailer,
     ) -> None:
         self.__logger = logger
         self.__product_repo = product_repo
@@ -27,7 +31,7 @@ class CreateProductUseCase:
             kind=RecordKind.PRODUCT_CREATED,
             user_id=user.id,
             product_id=product.id,
-            amount=input.stock
+            amount=input.stock,
         )
         self.__record_repo.save(record)
 
