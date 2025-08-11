@@ -11,3 +11,4 @@ class PublicRecordInfo:
     product_name: str
     user_name: str
     created_at: datetime
+    delivery_note_id: str | None = None
