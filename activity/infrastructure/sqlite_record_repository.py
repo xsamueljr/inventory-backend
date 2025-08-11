@@ -17,7 +17,8 @@ class SQLiteRecordRepository(RecordRepository):
             user_id TEXT NOT NULL,
             product_id TEXT NOT NULL,
             amount INTEGER NOT NULL,
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            delivery_note_id TEXT
         )
         """)
         conn.commit()
@@ -27,7 +28,7 @@ class SQLiteRecordRepository(RecordRepository):
     def save(self, record: Record) -> None:
         cur = self.__conn.cursor()
         cur.execute(
-            "INSERT INTO records (id, kind, user_id, product_id, amount, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO records (id, kind, user_id, product_id, amount, created_at, delivery_note_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
             (
                 record.id,
                 record.kind.value,
@@ -35,6 +36,7 @@ class SQLiteRecordRepository(RecordRepository):
                 record.product_id,
                 record.amount,
                 record.created_at.isoformat(),
+                record.delivery_note_id
             ),
         )
 
@@ -69,4 +71,5 @@ class SQLiteRecordRepository(RecordRepository):
             product_id=row[3],
             amount=row[4],
             created_at=datetime.fromisoformat(row[5]),
+            delivery_note_id=row[5]
         )
