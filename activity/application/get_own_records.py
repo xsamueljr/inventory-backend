@@ -36,6 +36,7 @@ class GetOwnRecordsUseCase:
                     product_name=cache[record.product_id].name,
                     user_name=user.name,
                     created_at=record.created_at,
+                    delivery_note_id=record.delivery_note_id
                 )
             )
 
