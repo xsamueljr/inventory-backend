@@ -18,9 +18,10 @@ from shared.infrastructure.basic_logger import basic_logger
 
 def get_create_product_usecase(
     product_repository: ProductRepository = Depends(get_product_repository),
+    record_repository: RecordRepository = Depends(get_record_repository),
     mailer: Emailer = Depends(get_mailer),
 ) -> CreateProductUseCase:
-    return CreateProductUseCase(basic_logger, product_repository, mailer)
+    return CreateProductUseCase(basic_logger, product_repository, record_repository, mailer)
 
 
 def get_register_sale_usecase(

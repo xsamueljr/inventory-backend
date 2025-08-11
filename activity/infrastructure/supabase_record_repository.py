@@ -37,6 +37,7 @@ class SupabaseRecordRepository(RecordRepository):
                 SELECT id, kind, user_id, product_id, amount, created_at
                 FROM records
                 WHERE user_id = %s
+                ORDER BY created_at DESC
                 LIMIT %s OFFSET %s
                 """,
                 (id, limit, offset),
@@ -50,6 +51,7 @@ class SupabaseRecordRepository(RecordRepository):
                 """
                 SELECT id, kind, user_id, product_id, amount, created_at
                 FROM records
+                ORDER BY created_at DESC
                 LIMIT %s OFFSET %s
                 """,
                 (limit, offset),

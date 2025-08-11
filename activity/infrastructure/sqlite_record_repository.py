@@ -1,4 +1,6 @@
 from typing import Any, List
+from datetime import datetime
+
 from activity.domain.record import Record, RecordKind
 from activity.domain.record_repository import RecordRepository
 from shared.infrastructure.sqlite_connection import get_connection
@@ -32,7 +34,7 @@ class SQLiteRecordRepository(RecordRepository):
                 record.user_id,
                 record.product_id,
                 record.amount,
-                record.created_at,
+                record.created_at.isoformat(),
             ),
         )
 
@@ -41,7 +43,7 @@ class SQLiteRecordRepository(RecordRepository):
 
     def get_all(self, limit: int, offset: int) -> List[Record]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM records LIMIT ? OFFSET ?", (limit, offset))
+        cur.execute("SELECT * FROM records ORDER BY created_at DESC LIMIT ? OFFSET ?", (limit, offset))
         result = cur.fetchall()
         cur.close()
         return [self.__map_to_domain(row) for row in result]
@@ -49,7 +51,7 @@ class SQLiteRecordRepository(RecordRepository):
     def get_by_user_id(self, id: str, limit: int, offset: int) -> List[Record]:
         cur = self.__conn.cursor()
         cur.execute(
-            "SELECT * FROM records WHERE user_id = ? LIMIT ? OFFSET ?",
+            "SELECT * FROM records WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?",
             (id, limit, offset),
         )
         result = cur.fetchall()
@@ -63,5 +65,5 @@ class SQLiteRecordRepository(RecordRepository):
             user_id=row[2],
             product_id=row[3],
             amount=row[4],
-            created_at=row[5],
+            created_at=datetime.fromisoformat(row[5]),
         )
