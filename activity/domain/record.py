@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from enum import Enum
 
+MADRID_TZ = ZoneInfo("Europe/Madrid")
 
 class RecordKind(Enum):
     PRODUCT_CREATED = "product-created"
@@ -18,4 +20,4 @@ class Record:
     product_id: str
     amount: int
 
-    created_at: datetime = field(default_factory=datetime.now)
+    created_at: datetime = field(default_factory=lambda: datetime.now(MADRID_TZ))
