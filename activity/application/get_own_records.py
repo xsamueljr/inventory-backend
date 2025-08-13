@@ -20,20 +20,23 @@ class GetOwnRecordsUseCase:
     ) -> List[PublicRecordInfo]:
         records = self.__record_repo.get_by_user_id(user.id, limit, offset)
 
-        cache: Dict[str, Product] = {}
+        cache: Dict[str, str] = {}
         results: List[PublicRecordInfo] = []
         for record in records:
             if cache.get(record.product_id) is None:
                 product = self.__product_repo.get_by_id(record.product_id)
-                if product is None:
-                    raise ProductNotFoundException(record.product_id)
-                cache[record.product_id] = product
+
+                cache[record.product_id] = (
+                    product.name
+                    if product is not None
+                    else "Producto borrado"
+                )
 
             results.append(
                 PublicRecordInfo(
                     kind=record.kind,
                     amount=record.amount,
-                    product_name=cache[record.product_id].name,
+                    product_name=cache[record.product_id],
                     user_name=user.name,
                     created_at=record.created_at,
                     delivery_note_id=record.delivery_note_id
