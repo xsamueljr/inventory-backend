@@ -4,8 +4,6 @@ from activity.application.dtos.public_record_info import PublicRecordInfo
 from activity.domain.record_repository import RecordRepository
 from auth.domain.logged_user_info import LoggedUserInfo
 from products.domain.product_repository import ProductRepository
-from products.domain.product import Product
-from products.domain.exceptions.product_not_found import ProductNotFoundException
 
 
 class GetOwnRecordsUseCase:
