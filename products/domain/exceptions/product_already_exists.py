@@ -1,4 +1,4 @@
-from shared.domain.exception import AppException
+from shared.domain.exception import AppException, ErrorType
 
 
 class ProductAlreadyExistsException(AppException):
@@ -10,4 +10,4 @@ class ProductAlreadyExistsException(AppException):
         else:
             message = "Product already exists"
 
-        super().__init__(message, is_operational=True)
+        super().__init__(message, is_operational=True, type=ErrorType.CONFLICT)

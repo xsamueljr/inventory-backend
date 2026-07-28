@@ -1,4 +1,4 @@
-from shared.domain.exception import AppException
+from shared.domain.exception import AppException, ErrorType
 
 
 class ProductNotFoundException(AppException):
@@ -8,4 +8,4 @@ class ProductNotFoundException(AppException):
         else:
             message = "Product not found"
 
-        super().__init__(message, is_operational=True)
+        super().__init__(message, is_operational=True, type=ErrorType.NOT_FOUND)
