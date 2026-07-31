@@ -25,11 +25,13 @@ class GetOwnRecordsUseCase:
                 product = self.__product_repo.get_by_id(record.product_id)
 
                 cache[record.product_id] = (
-                    product.name
-                    if product is not None
-                    else "Producto borrado"
+                    product.name if product is not None else "Producto borrado"
                 )
 
-            results.append(PublicRecordInfo.from_domain(record, cache[record.product_id], user.name))
+            results.append(
+                PublicRecordInfo.from_domain(
+                    record, cache[record.product_id], user.name
+                )
+            )
 
         return results

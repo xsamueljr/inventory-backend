@@ -36,7 +36,7 @@ class SQLiteRecordRepository(RecordRepository):
                 record.product_id,
                 record.amount,
                 record.created_at.isoformat(),
-                record.delivery_note_id
+                record.delivery_note_id,
             ),
         )
 
@@ -71,5 +71,5 @@ class SQLiteRecordRepository(RecordRepository):
             product_id=row[3],
             amount=row[4],
             created_at=datetime.fromisoformat(row[5]),
-            delivery_note_id=row[6]
+            delivery_note_id=row[6],
         )

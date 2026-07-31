@@ -26,7 +26,7 @@ class SupabaseRecordRepository(RecordRepository):
                     record.product_id,
                     record.amount,
                     record.created_at,
-                    record.delivery_note_id
+                    record.delivery_note_id,
                 ),
             )
         self.conn.commit()
@@ -68,7 +68,7 @@ class SupabaseRecordRepository(RecordRepository):
             product_id=row["product_id"],
             amount=row["amount"],
             created_at=row["created_at"],
-            delivery_note_id=row.get("delivery_note_id")
+            delivery_note_id=row.get("delivery_note_id"),
         )
 
     def __connect(self) -> psycopg.Connection:

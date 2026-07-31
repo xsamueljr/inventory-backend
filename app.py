@@ -10,6 +10,7 @@ from activity.infrastructure.fastapi.router import router as activity_router
 
 app = FastAPI()
 
+
 @app.exception_handler(AppException)
 async def app_exception_handler(_request, exc: AppException):
     status_code_map: dict[ErrorType, int] = {
@@ -21,11 +22,12 @@ async def app_exception_handler(_request, exc: AppException):
     }
 
     status = status_code_map.get(exc.type, 500)
-    
+
     return JSONResponse(
         status_code=status,
         content={"error": str(exc) if status != 500 else "Internal Server Error"},
     )
+
 
 app.add_middleware(
     CORSMiddleware,
