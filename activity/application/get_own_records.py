@@ -30,15 +30,6 @@ class GetOwnRecordsUseCase:
                     else "Producto borrado"
                 )
 
-            results.append(
-                PublicRecordInfo(
-                    kind=record.kind,
-                    amount=record.amount,
-                    product_name=cache[record.product_id],
-                    user_name=user.name,
-                    created_at=record.created_at,
-                    delivery_note_id=record.delivery_note_id
-                )
-            )
+            results.append(PublicRecordInfo.from_domain(record, cache[record.product_id], user.name))
 
         return results
