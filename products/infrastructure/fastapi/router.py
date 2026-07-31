@@ -1,6 +1,6 @@
 from typing import List, TypedDict
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from auth.domain.logged_user_info import LoggedUserInfo
 from core.infrastructure.fastapi.security import get_current_user
@@ -12,7 +12,6 @@ from products.application.get_by_id import GetProductByIdUsecase
 from products.application.register_arrival import RegisterArrivalUsecase
 from products.application.register_sell import RegisterSaleUsecase
 from products.application.search_by_name import SearchProductsByNameUsecase
-from products.domain.exceptions.product_not_found import ProductNotFoundException
 from products.infrastructure.fastapi.dependencies.usecases import (
     get_all_products_usecase,
     get_create_product_usecase,
