@@ -55,10 +55,7 @@ def get_products(
 def get_by_id(
     id: str, usecase: GetProductByIdUsecase = Depends(get_product_by_id_usecase)
 ) -> PublicProductInfo:
-    try:
-        return usecase.run(id)
-    except ProductNotFoundException:
-        raise HTTPException(status_code=404, detail="Product not found")
+    return usecase.run(id)
 
 
 @router.post("", status_code=201)
@@ -87,10 +84,7 @@ def register_sale(
     user: LoggedUserInfo = Depends(get_current_user),
     usecase: RegisterSaleUsecase = Depends(get_register_sale_usecase),
 ) -> None:
-    try:
-        usecase.run(user, request.map_to_dto())
-    except ProductNotFoundException:
-        raise HTTPException(status_code=404, detail="Product not found")
+    usecase.run(user, request.map_to_dto())
 
 
 @router.post("/arrival", status_code=201)
@@ -99,7 +93,4 @@ def register_arrival(
     user: LoggedUserInfo = Depends(get_current_user),
     usecase: RegisterArrivalUsecase = Depends(get_register_arrival_usecase),
 ) -> None:
-    try:
-        usecase.run(user, request.map_to_dto())
-    except ProductNotFoundException:
-        raise HTTPException(status_code=404, detail="Product not found")
+    usecase.run(user, request.map_to_dto())
