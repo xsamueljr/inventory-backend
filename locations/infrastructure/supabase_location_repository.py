@@ -13,11 +13,11 @@ class SupabaseLocationRepository(LocationRepository):
         self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
 
     def get_all(self) -> list[Location]:
-        cur = self.conn.execute('SELECT id, name FROM locations')  # type: ignore
+        cur = self.conn.execute("SELECT id, name FROM locations")  # type: ignore
         return [self.__to_domain(row) for row in cur.fetchall()]  # type: ignore
 
     def __to_domain(self, row: dict) -> Location:
         return Location(
-            id=row['id'],
-            name=row['name'],
+            id=row["id"],
+            name=row["name"],
         )
