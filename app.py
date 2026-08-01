@@ -7,6 +7,8 @@ from shared.infrastructure.env import ENV
 from auth.infrastructure.fastapi.router import router as auth_router
 from products.infrastructure.fastapi.router import router as products_router
 from activity.infrastructure.fastapi.router import router as activity_router
+from locations.infrastructure.fastapi.router import router as locations_router
+
 
 app = FastAPI()
 
@@ -40,3 +42,4 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(products_router)
 app.include_router(activity_router)
+app.include_router(locations_router)
