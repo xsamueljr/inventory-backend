@@ -5,3 +5,4 @@ from dataclasses import dataclass
 class LoggedUserInfo:
     id: str
     name: str
+    location_id: int | None
