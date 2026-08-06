@@ -19,8 +19,8 @@ class SupabaseProductRepository(ProductRepository):
             # Intentar insertar solo si no existe
             cur.execute(
                 """
-                INSERT INTO products (id, name, stock, arriving_date)
-                SELECT %s, %s, %s, %s
+                INSERT INTO products (id, name, stock, arriving_date, location_id)
+                SELECT %s, %s, %s, %s, %s
                 WHERE NOT EXISTS (
                     SELECT 1 FROM products WHERE id = %s
                 )
@@ -30,6 +30,7 @@ class SupabaseProductRepository(ProductRepository):
                     product.name,
                     product.stock,
                     product.arriving_date,
+                    product.location_id,
                     product.id,
                 ),
             )
@@ -43,17 +44,18 @@ class SupabaseProductRepository(ProductRepository):
                 UPDATE products
                 SET name = %s,
                     stock = %s,
-                    arriving_date = %s
+                    arriving_date = %s,
+                    location_id = %s,
                 WHERE id = %s
                 """,
-                (product.name, product.stock, product.arriving_date, product.id),
+                (product.name, product.stock, product.arriving_date, product.location_id, product.id),
             )
         self.conn.commit()
 
     def get_by_id(self, id: str) -> Optional[Product]:
         with self.conn.cursor() as cur:
             cur.execute(
-                "SELECT id, name, stock, arriving_date FROM products WHERE id = %s",
+                "SELECT id, name, stock, arriving_date, location_id FROM products WHERE id = %s",
                 (id,),
             )
             row = cur.fetchone()
@@ -62,7 +64,7 @@ class SupabaseProductRepository(ProductRepository):
     def get_by_name(self, name: str) -> Optional[Product]:
         with self.conn.cursor() as cur:
             cur.execute(
-                "SELECT id, name, stock, arriving_date FROM products WHERE name = %s",
+                "SELECT id, name, stock, arriving_date, location_id FROM products WHERE name = %s",
                 (name,),
             )
             row = cur.fetchone()
@@ -71,7 +73,7 @@ class SupabaseProductRepository(ProductRepository):
     def get_all(self, limit: int, offset: int) -> list[Product]:
         with self.conn.cursor() as cur:
             cur.execute(
-                "SELECT id, name, stock, arriving_date FROM products LIMIT %s OFFSET %s",
+                "SELECT id, name, stock, arriving_date, location_id FROM products LIMIT %s OFFSET %s",
                 (limit, offset),
             )
             rows = cur.fetchall()
@@ -86,8 +88,8 @@ class SupabaseProductRepository(ProductRepository):
         with self.conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, name, stock, arriving_date 
-                FROM products 
+                SELECT id, name, stock, arriving_date, location_id
+                FROM products
                 WHERE name ILIKE %s
                 """,
                 (f"%{name.strip()}%",),
@@ -102,6 +104,7 @@ class SupabaseProductRepository(ProductRepository):
             name=row["name"],
             stock=row["stock"],
             arriving_date=row["arriving_date"],
+            location_id=row["location_id"],
         )
 
     def __connect(self) -> psycopg.Connection:

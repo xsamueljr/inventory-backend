@@ -22,7 +22,8 @@ class SQLiteProductRepository(ProductRepository):
             id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             stock INTEGER NOT NULL,
-            arriving_date TEXT
+            arriving_date TEXT,
+            location_id INTEGER,
         )
         """)
         conn.commit()
@@ -33,8 +34,8 @@ class SQLiteProductRepository(ProductRepository):
         cur = self.__conn.cursor()
         try:
             cur.execute(
-                "INSERT INTO products (id, name, stock, arriving_date) VALUES (?, ?, ?, ?)",
-                (product.id, product.name, product.stock, product.arriving_date),
+                "INSERT INTO products (id, name, stock, arriving_date, location_id) VALUES (?, ?, ?, ?, ?)",
+                (product.id, product.name, product.stock, product.arriving_date, product.location_id),
             )
 
             self.__conn.commit()
@@ -67,8 +68,8 @@ class SQLiteProductRepository(ProductRepository):
     def update(self, product: Product) -> None:
         cur = self.__conn.cursor()
         cur.execute(
-            "UPDATE products SET name=?, stock=?, arriving_date=? WHERE id=?",
-            (product.name, product.stock, product.arriving_date, product.id),
+            "UPDATE products SET name=?, stock=?, arriving_date=?, location_id=? WHERE id=?",
+            (product.name, product.stock, product.arriving_date, product.location_id, product.id),
         )
         self.__conn.commit()
         cur.close()
@@ -93,4 +94,4 @@ class SQLiteProductRepository(ProductRepository):
         return self.__map_to_domain(result)
 
     def __map_to_domain(self, row: Any) -> Product:
-        return Product(id=row[0], name=row[1], stock=row[2], arriving_date=row[3])
+        return Product(id=row[0], name=row[1], stock=row[2], arriving_date=row[3], location_id=row[4])
