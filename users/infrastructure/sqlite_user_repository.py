@@ -19,7 +19,8 @@ class SQLiteUserRepository(UserRepository):
             id TEXT PRIMARY KEY,
             username TEXT NOT NULL,
             password TEXT NOT NULL,
-            shop_name TEXT NOT NULL
+            shop_name TEXT NOT NULL,
+            location_id INTEGER,
         )
         """)
 
@@ -29,8 +30,8 @@ class SQLiteUserRepository(UserRepository):
         cur = self.__conn.cursor()
         try:
             cur.execute(
-                "INSERT INTO users (id, username, password, shop_name) VALUES (?, ?, ?, ?)",
-                (user.id, user.username, user.password, user.shop_name),
+                "INSERT INTO users (id, username, password, shop_name, location_id) VALUES (?, ?, ?, ?, ?)",
+                (user.id, user.username, user.password, user.shop_name, user.location_id),
             )
 
             self.__conn.commit()
@@ -61,4 +62,4 @@ class SQLiteUserRepository(UserRepository):
         return self.__map_to_domain(result)
 
     def __map_to_domain(self, row: Any) -> User:
-        return User(id=row[0], username=row[1], password=row[2], shop_name=row[3])
+        return User(id=row[0], username=row[1], password=row[2], shop_name=row[3], location_id=row[4])

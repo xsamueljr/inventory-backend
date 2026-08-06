@@ -27,7 +27,7 @@ class SupabaseUserRepository(UserRepository):
         with self.__cursor() as cur:
             cur.execute(
                 """
-                SELECT id, username, password, shop_name FROM app_users WHERE id = %s
+                SELECT id, username, password, shop_name, location_id FROM app_users WHERE id = %s
                 """,
                 (id,),
             )
@@ -38,7 +38,7 @@ class SupabaseUserRepository(UserRepository):
         with self.__cursor() as cur:
             cur.execute(
                 """
-                SELECT id, username, password, shop_name FROM app_users WHERE username = %s
+                SELECT id, username, password, shop_name, location_id FROM app_users WHERE username = %s
                 """,
                 (username,),
             )
@@ -51,6 +51,7 @@ class SupabaseUserRepository(UserRepository):
             username=row["username"],
             password=row["password"],
             shop_name=row["shop_name"],
+            location_id=row["location_id"],
         )
 
     def __connect(self) -> psycopg.Connection:
