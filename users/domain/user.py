@@ -7,3 +7,4 @@ class User:
     username: str
     password: str
     shop_name: str
+    location_id: int | None = None
