@@ -23,7 +23,7 @@ class SQLiteProductRepository(ProductRepository):
             name TEXT NOT NULL,
             stock INTEGER NOT NULL,
             arriving_date TEXT,
-            location_id INTEGER,
+            location_id INTEGER
         )
         """)
         conn.commit()
