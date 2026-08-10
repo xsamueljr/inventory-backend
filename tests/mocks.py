@@ -31,6 +31,9 @@ class MockProductRepository(ProductRepository):
     def get_by_id(self, id: str) -> Product | None:
         return self.__query(lambda product: product.id == id)
 
+    def get_by_location(self, location_id: int) -> List[Product]:
+        return [product for product in self.__products if product.location_id == location_id]
+
     def get_by_name(self, name: str) -> Product | None:
         return self.__query(lambda product: product.name == name)
 

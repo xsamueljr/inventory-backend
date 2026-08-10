@@ -15,6 +15,9 @@ class ProductRepository(ABC):
     def get_by_id(self, id: str) -> Optional[Product]: ...
 
     @abstractmethod
+    def get_by_location(self, location_id: int) -> List[Product]: ...
+
+    @abstractmethod
     def get_by_name(self, name: str) -> Optional[Product]: ...
 
     @abstractmethod

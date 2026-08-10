@@ -49,6 +49,12 @@ class SQLiteProductRepository(ProductRepository):
     def get_by_id(self, id: str) -> Product | None:
         return self.__get_one("id", id)
 
+    def get_by_location(self, location_id: int) -> List[Product]:
+        cur = self.__conn.cursor()
+        cur.execute("SELECT * FROM products WHERE location_id = ?", (location_id,))
+        result = cur.fetchall()
+        return [self.__map_to_domain(row) for row in result]
+
     def get_by_name(self, name: str) -> Product | None:
         return self.__get_one("name", name)
 

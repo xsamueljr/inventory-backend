@@ -8,6 +8,7 @@ from products.application.create_product import CreateProductUseCase
 from products.application.delete_by_id import DeleteProductByIdUsecase
 from products.application.get_all import GetAllProductsUsecase
 from products.application.get_by_id import GetProductByIdUsecase
+from products.application.get_local_products import GetLocalProductsUseCase
 from products.application.register_arrival import RegisterArrivalUsecase
 from products.application.register_sell import RegisterSaleUsecase
 from products.application.search_by_name import SearchProductsByNameUsecase
@@ -53,6 +54,12 @@ def get_product_by_id_usecase(
     repo: ProductRepository = Depends(get_product_repository),
 ) -> GetProductByIdUsecase:
     return GetProductByIdUsecase(repo)
+
+
+def get_get_local_products_usecase(
+    repo: ProductRepository = Depends(get_product_repository),
+) -> GetLocalProductsUseCase:
+    return GetLocalProductsUseCase(repo)
 
 
 def get_delete_product_usecase(
