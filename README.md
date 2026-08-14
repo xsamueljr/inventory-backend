@@ -56,7 +56,7 @@ Crea un archivo `.env` en la raíz del proyecto basándote en esta [plantilla de
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/tu-repo-backend.git
+git clone https://github.com/xsamueljr/inventory-backend.git
 cd tu-repo-backend
 ```
 
