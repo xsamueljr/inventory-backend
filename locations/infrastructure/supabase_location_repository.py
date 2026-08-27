@@ -1,3 +1,5 @@
+from typing import List
+
 import psycopg
 from psycopg.rows import dict_row
 
@@ -12,7 +14,7 @@ class SupabaseLocationRepository(LocationRepository):
         self.conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
         self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
 
-    def get_all(self) -> list[Location]:
+    def get_all(self) -> List[Location]:
         cur = self.conn.execute("SELECT id, name FROM locations")  # type: ignore
         return [self.__to_domain(row) for row in cur.fetchall()]  # type: ignore
 
