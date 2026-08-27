@@ -15,3 +15,9 @@ class Product:
 
     def has_low_stock(self) -> bool:
         return self.stock <= 1
+
+    def is_global(self) -> bool:
+        return self.location_id is None
+
+    def is_local(self) -> bool:
+        return self.location_id is not None
