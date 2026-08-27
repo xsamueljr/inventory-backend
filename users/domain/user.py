@@ -6,6 +6,7 @@ class UserRole(Enum):
     USER = "user"
     ADMIN = "admin"
 
+
 @dataclass
 class User:
     id: str

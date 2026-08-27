@@ -48,7 +48,13 @@ class SupabaseProductRepository(ProductRepository):
                     location_id = %s,
                 WHERE id = %s
                 """,
-                (product.name, product.stock, product.arriving_date, product.location_id, product.id),
+                (
+                    product.name,
+                    product.stock,
+                    product.arriving_date,
+                    product.location_id,
+                    product.id,
+                ),
             )
         self.conn.commit()
 
@@ -61,7 +67,9 @@ class SupabaseProductRepository(ProductRepository):
             row = cur.fetchone()
             return self.__to_product(cast(Dict[str, Any], row)) if row else None
 
-    def get_by_location(self, location_id: int, limit: int, offset: int) -> List[Product]:
+    def get_by_location(
+        self, location_id: int, limit: int, offset: int
+    ) -> List[Product]:
         with self.conn.cursor() as cur:
             cur.execute(
                 "SELECT id, name, stock, arriving_date, location_id FROM products WHERE location_id = %s LIMIT %s OFFSET %s",

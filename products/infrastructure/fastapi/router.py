@@ -81,6 +81,7 @@ def create(
     id = usecase.run(user, input)
     return {"id": id}
 
+
 @router.post("/local", status_code=201)
 def create_local(
     request: CreateProductRequest,

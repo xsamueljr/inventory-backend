@@ -31,7 +31,13 @@ class SQLiteUserRepository(UserRepository):
         try:
             cur.execute(
                 "INSERT INTO users (id, username, password, shop_name, location_id) VALUES (?, ?, ?, ?, ?)",
-                (user.id, user.username, user.password, user.shop_name, user.location_id),
+                (
+                    user.id,
+                    user.username,
+                    user.password,
+                    user.shop_name,
+                    user.location_id,
+                ),
             )
 
             self.__conn.commit()
@@ -62,4 +68,10 @@ class SQLiteUserRepository(UserRepository):
         return self.__map_to_domain(result)
 
     def __map_to_domain(self, row: Any) -> User:
-        return User(id=row[0], username=row[1], password=row[2], shop_name=row[3], location_id=row[4])
+        return User(
+            id=row[0],
+            username=row[1],
+            password=row[2],
+            shop_name=row[3],
+            location_id=row[4],
+        )

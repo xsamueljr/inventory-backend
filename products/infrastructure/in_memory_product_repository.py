@@ -22,7 +22,11 @@ class InMemoryProductRepository(ProductRepository):
         return self.__copy(product)
 
     def get_by_location(self, location_id: int) -> List[Product]:
-        return [self.__copy(product) for product in self.__products.values() if product.location_id == location_id]
+        return [
+            self.__copy(product)
+            for product in self.__products.values()
+            if product.location_id == location_id
+        ]
 
     def get_by_name(self, name: str) -> Product | None:
         for product in self.__products.values():
