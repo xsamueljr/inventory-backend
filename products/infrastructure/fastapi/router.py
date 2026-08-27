@@ -62,12 +62,13 @@ def get_by_id(
 @router.get("/local")
 def get_local_products(
     user: LoggedUserInfo = Depends(get_current_user),
+    pagination: PaginationQueryParams = Depends(),
     usecase: GetLocalProductsUseCase = Depends(get_get_local_products_usecase),
 ) -> List[PublicProductInfo]:
     if not user.location_id:
         raise HTTPException(status_code=400, detail="Location ID is required")
 
-    return usecase.run(user.location_id)
+    return usecase.run(user.location_id, pagination.limit, pagination.offset)
 
 
 @router.post("", status_code=201)
