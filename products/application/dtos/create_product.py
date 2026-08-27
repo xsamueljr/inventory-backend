@@ -10,6 +10,7 @@ class CreateProductDTO:
     name: str
     stock: int = 0
     arriving_date: Optional[date] = None
+    location_id: int | None = None
 
     def to_domain(self) -> Product:
-        return Product(self.name, self.stock, self.arriving_date)
+        return Product(self.name, self.stock, self.arriving_date, location_id=self.location_id)
