@@ -81,6 +81,20 @@ def create(
     id = usecase.run(user, input)
     return {"id": id}
 
+@router.post("/local", status_code=201)
+def create_local(
+    request: CreateProductRequest,
+    user: LoggedUserInfo = Depends(get_current_user),
+    usecase: CreateProductUseCase = Depends(get_create_product_usecase),
+) -> CreateProductResponse:
+    input = request.map_to_domain()
+    if not user.location_id:
+        raise HTTPException(status_code=400, detail="Location ID is required")
+
+    input.location_id = user.location_id
+    id = usecase.run(user, input)
+    return {"id": id}
+
 
 @router.delete("/{id}", status_code=204)
 def delete(
