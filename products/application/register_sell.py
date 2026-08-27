@@ -43,6 +43,11 @@ class RegisterSaleUsecase:
         if not product:
             raise ProductNotFoundException(input.product_id)
 
+        if product.is_local() and user.location_id is not None and product.location_id != user.location_id:
+            # should not happen
+            raise ValueError("Product location does not match user location")
+
+
         product.stock -= input.amount
         self.__product_repo.update(product)
 
