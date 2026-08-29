@@ -62,8 +62,7 @@ class MockProductRepository(ProductRepository):
         return [
             product
             for product in self.__products
-            if name.strip() in product.name.strip()
-            and product.is_global()
+            if name.strip() in product.name.strip() and product.is_global()
         ]
 
     def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:

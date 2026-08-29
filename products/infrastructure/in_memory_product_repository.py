@@ -50,8 +50,7 @@ class InMemoryProductRepository(ProductRepository):
         return [
             self.__copy(product)
             for product in self.__products.values()
-            if search_term in product.name.lower()
-            and product.is_global()
+            if search_term in product.name.lower() and product.is_global()
         ]
 
     def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:
