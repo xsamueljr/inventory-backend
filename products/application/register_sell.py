@@ -8,7 +8,9 @@ from emails.domain.email import Email
 from emails.domain.emailer import Emailer
 from emails.domain.stock_warning import StockWarningEmail
 from products.domain.exceptions.product_not_found import ProductNotFoundException
-from products.domain.exceptions.unauthorized_product_access import UnauthorizedProductAccess
+from products.domain.exceptions.unauthorized_product_access import (
+    UnauthorizedProductAccess,
+)
 from products.domain.product_repository import ProductRepository
 from shared.domain.logger import Logger
 

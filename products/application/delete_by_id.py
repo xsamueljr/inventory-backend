@@ -4,7 +4,9 @@ from activity.domain.record_repository import RecordRepository
 from activity.domain.record import Record, RecordKind
 from auth.domain.logged_user_info import LoggedUserInfo
 from products.domain.exceptions.product_not_found import ProductNotFoundException
-from products.domain.exceptions.unauthorized_product_access import UnauthorizedProductAccess
+from products.domain.exceptions.unauthorized_product_access import (
+    UnauthorizedProductAccess,
+)
 from products.domain.product_repository import ProductRepository
 from shared.domain.logger import Logger
 
