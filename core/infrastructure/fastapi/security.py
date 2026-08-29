@@ -31,4 +31,4 @@ def get_current_user(
     if not user:
         raise credentials_exception
 
-    return LoggedUserInfo(user.id, user.username, user.location_id)
+    return LoggedUserInfo.from_domain(user)
