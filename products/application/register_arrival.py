@@ -7,6 +7,7 @@ from activity.domain.record import Record, RecordKind
 from activity.domain.record_repository import RecordRepository
 from auth.domain.logged_user_info import LoggedUserInfo
 from products.domain.exceptions.product_not_found import ProductNotFoundException
+from products.domain.exceptions.unauthorized_product_access import UnauthorizedProductAccess
 from products.domain.product_repository import ProductRepository
 from shared.domain.logger import Logger
 
@@ -39,6 +40,9 @@ class RegisterArrivalUsecase:
         product = self.__product_repo.get_by_id(input.id)
         if not product:
             raise ProductNotFoundException(input.id)
+
+        if not product.can_be_managed_by(user):
+            raise UnauthorizedProductAccess(input.id)
 
         product.stock += input.amount
         product.arriving_date = input.arriving_date

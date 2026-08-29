@@ -4,6 +4,7 @@ from activity.domain.record_repository import RecordRepository
 from activity.domain.record import Record, RecordKind
 from auth.domain.logged_user_info import LoggedUserInfo
 from products.domain.exceptions.product_not_found import ProductNotFoundException
+from products.domain.exceptions.unauthorized_product_access import UnauthorizedProductAccess
 from products.domain.product_repository import ProductRepository
 from shared.domain.logger import Logger
 
@@ -23,6 +24,9 @@ class DeleteProductByIdUsecase:
         product = self.__repo.get_by_id(id)
         if product is None:
             raise ProductNotFoundException(id)
+
+        if not product.can_be_managed_by(user):
+            raise UnauthorizedProductAccess(id)
 
         record = Record(
             id=str(uuid4()),
