@@ -3,6 +3,8 @@ from datetime import date
 from typing import Optional
 from uuid import uuid4
 
+from auth.domain.logged_user_info import LoggedUserInfo
+
 
 @dataclass
 class Product:
@@ -15,6 +17,19 @@ class Product:
 
     def has_low_stock(self) -> bool:
         return self.stock <= 1
+
+    # Technical debt (domain using a DTO from application) but at least it isn't huge logic
+    def can_be_managed_by(self, user: LoggedUserInfo) -> bool:
+        if self.is_global():
+            return True
+
+        if user.is_admin:
+            return True
+
+        if user.location_id is None:
+            return False
+
+        return self.location_id == user.location_id
 
     def is_global(self) -> bool:
         return self.location_id is None

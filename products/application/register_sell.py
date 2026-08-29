@@ -8,6 +8,7 @@ from emails.domain.email import Email
 from emails.domain.emailer import Emailer
 from emails.domain.stock_warning import StockWarningEmail
 from products.domain.exceptions.product_not_found import ProductNotFoundException
+from products.domain.exceptions.unauthorized_product_access import UnauthorizedProductAccess
 from products.domain.product_repository import ProductRepository
 from shared.domain.logger import Logger
 
@@ -43,13 +44,8 @@ class RegisterSaleUsecase:
         if not product:
             raise ProductNotFoundException(input.product_id)
 
-        if (
-            product.is_local()
-            and user.location_id is not None
-            and product.location_id != user.location_id
-        ):
-            # should not happen
-            raise ValueError("Product location does not match user location")
+        if not product.can_be_managed_by(user):
+            raise UnauthorizedProductAccess(input.product_id)
 
         product.stock -= input.amount
         self.__product_repo.update(product)
