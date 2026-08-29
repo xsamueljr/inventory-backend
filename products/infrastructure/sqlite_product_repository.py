@@ -55,9 +55,9 @@ class SQLiteProductRepository(ProductRepository):
     def get_by_id(self, id: str) -> Product | None:
         return self.__get_one("id", id)
 
-    def get_by_location(self, location_id: int) -> List[Product]:
+    def get_by_location(self, location_id: int, limit: int, offset: int) -> List[Product]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM products WHERE location_id = ?", (location_id,))
+        cur.execute("SELECT * FROM products WHERE location_id = ? LIMIT ? OFFSET ?", (location_id, limit, offset))
         result = cur.fetchall()
         return [self.__map_to_domain(row) for row in result]
 
@@ -66,13 +66,19 @@ class SQLiteProductRepository(ProductRepository):
 
     def search_by_name(self, name: str) -> List[Product]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM products WHERE name LIKE %?%", name.lower())
+        cur.execute("SELECT * FROM products WHERE name LIKE %?%", (name.lower(),))
+        results = cur.fetchall()
+        return [self.__map_to_domain(row) for row in results]
+
+    def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:
+        cur = self.__conn.cursor()
+        cur.execute("SELECT * FROM products WHERE name LIKE %?% AND location_id = ?", (name.lower(), location_id))
         results = cur.fetchall()
         return [self.__map_to_domain(row) for row in results]
 
     def get_all(self, limit: int, offset: int) -> List[Product]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM products LIMIT ? OFFSET ?", (limit, offset))
+        cur.execute("SELECT * FROM products WHERE location_id IS NULL LIMIT ? OFFSET ?", (limit, offset))
         result = cur.fetchall()
         cur.close()
         return [self.__map_to_domain(row) for row in result]

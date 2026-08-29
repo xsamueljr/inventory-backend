@@ -51,6 +51,17 @@ class InMemoryProductRepository(ProductRepository):
             self.__copy(product)
             for product in self.__products.values()
             if search_term in product.name.lower()
+            and product.is_global()
+        ]
+
+    def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:
+        search_term = name.lower()
+
+        return [
+            self.__copy(product)
+            for product in self.__products.values()
+            if search_term in product.name.lower()
+            and product.location_id == location_id
         ]
 
     def __copy(self, product: Product) -> Product:
