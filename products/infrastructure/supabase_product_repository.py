@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, cast, List, override
+from typing import Optional, Dict, Any, cast, List
 
 import psycopg
 from psycopg.rows import dict_row
