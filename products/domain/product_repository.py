@@ -30,3 +30,6 @@ class ProductRepository(ABC):
 
     @abstractmethod
     def search_by_name(self, name: str) -> List[Product]: ...
+
+    @abstractmethod
+    def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]: ...

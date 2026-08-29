@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any, cast, List
+from typing import Optional, Dict, Any, cast, List, override
 
 import psycopg
 from psycopg.rows import dict_row
@@ -15,7 +15,7 @@ class SupabaseProductRepository(ProductRepository):
         self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
 
     def save(self, product: Product) -> None:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             # Intentar insertar solo si no existe
             cur.execute(
                 """
@@ -37,7 +37,7 @@ class SupabaseProductRepository(ProductRepository):
         self.conn.commit()
 
     def update(self, product: Product) -> None:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             # Actualiza solo si ya existe
             cur.execute(
                 """
@@ -59,7 +59,7 @@ class SupabaseProductRepository(ProductRepository):
         self.conn.commit()
 
     def get_by_id(self, id: str) -> Optional[Product]:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             cur.execute(
                 "SELECT id, name, stock, arriving_date, location_id FROM products WHERE id = %s",
                 (id,),
@@ -70,7 +70,7 @@ class SupabaseProductRepository(ProductRepository):
     def get_by_location(
         self, location_id: int, limit: int, offset: int
     ) -> List[Product]:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             cur.execute(
                 "SELECT id, name, stock, arriving_date, location_id FROM products WHERE location_id = %s LIMIT %s OFFSET %s",
                 (location_id, limit, offset),
@@ -79,30 +79,30 @@ class SupabaseProductRepository(ProductRepository):
             return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
 
     def get_by_name(self, name: str) -> Optional[Product]:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             cur.execute(
-                "SELECT id, name, stock, arriving_date, location_id FROM products WHERE name = %s",
+                "SELECT id, name, stock, arriving_date, location_id FROM products WHERE name = %s AND location_id IS NULL",
                 (name,),
             )
             row = cur.fetchone()
             return self.__to_product(cast(Dict[str, Any], row)) if row else None
 
     def get_all(self, limit: int, offset: int) -> list[Product]:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             cur.execute(
-                "SELECT id, name, stock, arriving_date, location_id FROM products LIMIT %s OFFSET %s",
+                "SELECT id, name, stock, arriving_date, location_id FROM products WHERE location_id IS NULL LIMIT %s OFFSET %s",
                 (limit, offset),
             )
             rows = cur.fetchall()
             return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
 
     def delete(self, id: str) -> None:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             cur.execute("DELETE FROM products WHERE id = %s", (id,))
         self.conn.commit()
 
     def search_by_name(self, name: str) -> List[Product]:
-        with self.conn.cursor() as cur:
+        with self.__cursor() as cur:
             cur.execute(
                 """
                 SELECT id, name, stock, arriving_date, location_id
@@ -112,6 +112,19 @@ class SupabaseProductRepository(ProductRepository):
                 (f"%{name.strip()}%",),
             )
 
+            rows = cur.fetchall()
+            return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
+
+    def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:
+        with self.__cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, name, stock, arriving_date, location_id
+                FROM products
+                WHERE name ILIKE %s AND location_id = %s
+                """,
+                (f"%{name.strip()}%", location_id),
+            )
             rows = cur.fetchall()
             return [self.__to_product(cast(Dict[str, Any], r)) for r in rows]
 
