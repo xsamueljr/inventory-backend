@@ -13,7 +13,7 @@ class User:
     username: str
     password: str
     shop_name: str
-    location_id: int | None = None
+    location_id: int
     role: UserRole = UserRole.USER
 
     def is_admin(self) -> bool:

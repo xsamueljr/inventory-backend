@@ -19,7 +19,9 @@ def normal_registration(
     request: RegisterRequest,
     usecase: RegisterUserUsecase = Depends(get_register_usecase),
 ) -> None:
-    usecase.run(request.username, request.shop_name, request.password)
+    usecase.run(
+        request.username, request.shop_name, request.password, request.location_id
+    )
 
 
 def disabled_registration() -> None:

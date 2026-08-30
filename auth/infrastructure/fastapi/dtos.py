@@ -19,6 +19,7 @@ class RegisterRequest(BaseModel):
     username: str = name_field
     password: str = password_field
     shop_name: str = name_field
+    location_id: int
 
 
 class TokenResponse(BaseModel):

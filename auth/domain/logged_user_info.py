@@ -7,7 +7,7 @@ from users.domain.user import User
 class LoggedUserInfo:
     id: str
     name: str
-    location_id: int | None = None
+    location_id: int
     is_admin: bool = False
 
     @classmethod

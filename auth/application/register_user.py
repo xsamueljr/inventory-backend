@@ -10,8 +10,8 @@ class RegisterUserUsecase:
         self.__user_repository = user_repository
         self.__hasher = hasher
 
-    def run(self, name: str, shop_name: str, password: str) -> None:
+    def run(self, name: str, shop_name: str, password: str, location_id: int) -> None:
         hashed_password = self.__hasher.hash(password)
-        user = User(str(uuid4()), name, hashed_password, shop_name)
+        user = User(str(uuid4()), name, hashed_password, shop_name, location_id)
 
         self.__user_repository.save(user)
