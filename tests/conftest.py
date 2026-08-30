@@ -16,4 +16,4 @@ def run_around_tests():
 
 @pytest.fixture
 def mock_user() -> LoggedUserInfo:
-    return LoggedUserInfo("irrelevant-id", "irrelevant-name")
+    return LoggedUserInfo("irrelevant-id", "irrelevant-name", location_id=1)

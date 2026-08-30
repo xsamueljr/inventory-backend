@@ -16,10 +16,16 @@ class SupabaseUserRepository(UserRepository):
         with self.__cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO app_users (id, username, password, shop_name)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO app_users (id, username, password, shop_name, location_id)
+                VALUES (%s, %s, %s, %s, %s)
                 """,
-                (user.id, user.username, user.password, user.shop_name),
+                (
+                    user.id,
+                    user.username,
+                    user.password,
+                    user.shop_name,
+                    user.location_id,
+                ),
             )
         self.conn.commit()
 

@@ -26,9 +26,6 @@ class Product:
         if user.is_admin:
             return True
 
-        if user.location_id is None:
-            return False
-
         return self.location_id == user.location_id
 
     def is_global(self) -> bool:

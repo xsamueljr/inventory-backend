@@ -20,7 +20,7 @@ class SQLiteUserRepository(UserRepository):
             username TEXT NOT NULL,
             password TEXT NOT NULL,
             shop_name TEXT NOT NULL,
-            location_id INTEGER,
+            location_id INTEGER NOT NULL
         )
         """)
 

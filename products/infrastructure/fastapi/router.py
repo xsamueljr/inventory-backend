@@ -1,6 +1,6 @@
 from typing import List, TypedDict
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from auth.domain.logged_user_info import LoggedUserInfo
 from core.infrastructure.fastapi.security import get_current_user
@@ -65,9 +65,6 @@ def get_local_products(
     pagination: PaginationQueryParams = Depends(),
     usecase: GetLocalProductsUseCase = Depends(get_get_local_products_usecase),
 ) -> List[PublicProductInfo]:
-    if not user.location_id:
-        raise HTTPException(status_code=400, detail="Location ID is required")
-
     return usecase.run(user.location_id, pagination.limit, pagination.offset)
 
 
@@ -89,9 +86,6 @@ def create_local(
     usecase: CreateProductUseCase = Depends(get_create_product_usecase),
 ) -> CreateProductResponse:
     input = request.map_to_domain()
-    if not user.location_id:
-        raise HTTPException(status_code=400, detail="Location ID is required")
-
     input.location_id = user.location_id
     id = usecase.run(user, input)
     return {"id": id}
