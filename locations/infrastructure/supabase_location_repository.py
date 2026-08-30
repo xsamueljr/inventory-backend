@@ -5,14 +5,15 @@ from psycopg.rows import dict_row
 
 from locations.domain.location import Location
 from locations.domain.location_repository import LocationRepository
-from shared.infrastructure.env import ENV
+from shared.infrastructure.database_credentials import DatabaseCredentials
 
 
 class SupabaseLocationRepository(LocationRepository):
-    def __init__(self):
-        conninfo = ENV.SUPABASE_PG_CONN
+    def __init__(self, credentials: DatabaseCredentials) -> None:
+        self.credentials = credentials
+        conninfo = credentials.connection_string
         self.conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
+        self.conn.execute(f'SET search_path TO "{credentials.schema}"')  # type: ignore
 
     def get_all(self) -> List[Location]:
         cur = self.conn.execute("SELECT id, name FROM locations")  # type: ignore

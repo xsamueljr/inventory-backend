@@ -3,16 +3,15 @@ from typing import Optional, Dict, Any, cast, List
 import psycopg
 from psycopg.rows import dict_row
 
+from shared.infrastructure.database_credentials import DatabaseCredentials
 from products.domain.product import Product
 from products.domain.product_repository import ProductRepository
-from shared.infrastructure.env import ENV
 
 
 class SupabaseProductRepository(ProductRepository):
-    def __init__(self) -> None:
-        conninfo = ENV.SUPABASE_PG_CONN
-        self.conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        self.conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
+    def __init__(self, credentials: DatabaseCredentials) -> None:
+        self.credentials = credentials
+        self.conn = self.__connect()
 
     def save(self, product: Product) -> None:
         with self.__cursor() as cur:
@@ -138,9 +137,9 @@ class SupabaseProductRepository(ProductRepository):
         )
 
     def __connect(self) -> psycopg.Connection:
-        conninfo = ENV.SUPABASE_PG_CONN
+        conninfo = self.credentials.connection_string
         conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
+        conn.execute(f'SET search_path TO "{self.credentials.schema}"')  # type: ignore
         return conn
 
     def __cursor(self) -> psycopg.Cursor:

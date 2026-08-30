@@ -5,11 +5,12 @@ from psycopg.rows import dict_row
 
 from activity.domain.record import Record, RecordKind
 from activity.domain.record_repository import RecordRepository
-from shared.infrastructure.env import ENV
+from shared.infrastructure.database_credentials import DatabaseCredentials
 
 
 class SupabaseRecordRepository(RecordRepository):
-    def __init__(self) -> None:
+    def __init__(self, credentials: DatabaseCredentials) -> None:
+        self.credentials = credentials
         self.conn = self.__connect()
 
     def save(self, record: Record) -> None:
@@ -72,9 +73,9 @@ class SupabaseRecordRepository(RecordRepository):
         )
 
     def __connect(self) -> psycopg.Connection:
-        conninfo = ENV.SUPABASE_PG_CONN
+        conninfo = self.credentials.connection_string
         conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
+        conn.execute(f'SET search_path TO "{self.credentials.schema}"')  # type: ignore
         return conn
 
     def __cursor(self) -> psycopg.Cursor:

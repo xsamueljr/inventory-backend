@@ -3,13 +3,14 @@ from typing import Optional, Dict, Any, cast
 import psycopg
 from psycopg.rows import dict_row
 
+from shared.infrastructure.database_credentials import DatabaseCredentials
 from users.domain.user import User
 from users.domain.user_repository import UserRepository
-from shared.infrastructure.env import ENV
 
 
 class SupabaseUserRepository(UserRepository):
-    def __init__(self) -> None:
+    def __init__(self, credentials: DatabaseCredentials) -> None:
+        self.credentials = credentials
         self.conn = self.__connect()
 
     def save(self, user: User) -> None:
@@ -61,9 +62,9 @@ class SupabaseUserRepository(UserRepository):
         )
 
     def __connect(self) -> psycopg.Connection:
-        conninfo = ENV.SUPABASE_PG_CONN
+        conninfo = self.credentials.connection_string
         conn = psycopg.connect(conninfo, row_factory=dict_row)  # type: ignore
-        conn.execute(f'SET search_path TO "{ENV.PG_SCHEMA}"')  # type: ignore
+        conn.execute(f'SET search_path TO "{self.credentials.schema}"')  # type: ignore
         return conn
 
     def __cursor(self) -> psycopg.Cursor:
