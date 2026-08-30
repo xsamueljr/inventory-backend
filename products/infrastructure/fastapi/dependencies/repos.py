@@ -3,6 +3,7 @@ from products.infrastructure.sqlite_product_repository import SQLiteProductRepos
 from products.infrastructure.supabase_product_repository import (
     SupabaseProductRepository,
 )
+from shared.infrastructure.database_credentials import DatabaseCredentials
 from shared.infrastructure.env import ENV
 
 
@@ -13,4 +14,9 @@ from functools import lru_cache
 def get_product_repository() -> ProductRepository:
     if ENV.SQLITE_PATH:
         return SQLiteProductRepository(ENV.SQLITE_PATH)
-    return SupabaseProductRepository()
+    return SupabaseProductRepository(
+        DatabaseCredentials(
+            connection_string=ENV.SUPABASE_PG_CONN,
+            schema=ENV.PG_SCHEMA,
+        )
+    )

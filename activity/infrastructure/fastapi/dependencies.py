@@ -7,6 +7,7 @@ from activity.infrastructure.supabase_record_repository import SupabaseRecordRep
 from activity.domain.record_repository import RecordRepository
 from activity.application.get_own_records import GetOwnRecordsUseCase
 from products.domain.product_repository import ProductRepository
+from shared.infrastructure.database_credentials import DatabaseCredentials
 from shared.infrastructure.env import ENV
 from products.infrastructure.fastapi.dependencies.repos import get_product_repository
 
@@ -15,7 +16,12 @@ from products.infrastructure.fastapi.dependencies.repos import get_product_repos
 def get_record_repository() -> RecordRepository:
     if ENV.SQLITE_PATH:
         return SQLiteRecordRepository(ENV.SQLITE_PATH)
-    return SupabaseRecordRepository()
+    return SupabaseRecordRepository(
+        DatabaseCredentials(
+            connection_string=ENV.SUPABASE_PG_CONN,
+            schema=ENV.PG_SCHEMA,
+        )
+    )
 
 
 def get_own_records_usecase(

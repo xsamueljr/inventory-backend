@@ -8,9 +8,18 @@ from locations.infrastructure.supabase_location_repository import (
 )
 
 
+from shared.infrastructure.database_credentials import DatabaseCredentials
+from shared.infrastructure.env import ENV
+
+
 @lru_cache
 def get_location_repository() -> LocationRepository:
-    return SupabaseLocationRepository()
+    return SupabaseLocationRepository(
+        DatabaseCredentials(
+            connection_string=ENV.SUPABASE_PG_CONN,
+            schema=ENV.PG_SCHEMA,
+        )
+    )
 
 
 def get_get_all_locations_usecase(
