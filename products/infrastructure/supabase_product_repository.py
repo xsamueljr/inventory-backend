@@ -107,6 +107,7 @@ class SupabaseProductRepository(ProductRepository):
                 SELECT id, name, stock, arriving_date, location_id
                 FROM products
                 WHERE name ILIKE %s
+                AND location_id IS NULL
                 """,
                 (f"%{name.strip()}%",),
             )
