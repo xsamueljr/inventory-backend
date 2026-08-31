@@ -52,13 +52,6 @@ def get_products(
     return usecase.run(pagination.limit, pagination.offset)
 
 
-@router.get("/{id}")
-def get_by_id(
-    id: str, usecase: GetProductByIdUsecase = Depends(get_product_by_id_usecase)
-) -> PublicProductInfo:
-    return usecase.run(id)
-
-
 @router.get("/local")
 def get_local_products(
     user: LoggedUserInfo = Depends(get_current_user),
@@ -66,6 +59,12 @@ def get_local_products(
     usecase: GetLocalProductsUseCase = Depends(get_get_local_products_usecase),
 ) -> List[PublicProductInfo]:
     return usecase.run(user.location_id, pagination.limit, pagination.offset)
+
+@router.get("/{id}")
+def get_by_id(
+    id: str, usecase: GetProductByIdUsecase = Depends(get_product_by_id_usecase)
+) -> PublicProductInfo:
+    return usecase.run(id)
 
 
 @router.post("", status_code=201)
