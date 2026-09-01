@@ -44,7 +44,7 @@ class SupabaseProductRepository(ProductRepository):
                 SET name = %s,
                     stock = %s,
                     arriving_date = %s,
-                    location_id = %s,
+                    location_id = %s
                 WHERE id = %s
                 """,
                 (
