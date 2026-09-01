@@ -1,5 +1,5 @@
 from shared.infrastructure.database_credentials import DatabaseCredentials
-from users.domain.user import User, UserRole
+from users.domain.user import User
 from users.infrastructure.supabase_user_repository import SupabaseUserRepository
 
 
