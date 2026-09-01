@@ -1,6 +1,7 @@
 import os
 import pytest
 import psycopg
+
 try:
     from testcontainers.community.postgres import PostgresContainer
 except ImportError:
@@ -83,4 +84,3 @@ def postgres_credentials(postgres_container: str) -> DatabaseCredentials:
         conn.commit()
 
     return credentials
-

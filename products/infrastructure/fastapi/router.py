@@ -60,6 +60,7 @@ def get_local_products(
 ) -> List[PublicProductInfo]:
     return usecase.run(user.location_id, pagination.limit, pagination.offset)
 
+
 @router.get("/{id}")
 def get_by_id(
     id: str, usecase: GetProductByIdUsecase = Depends(get_product_by_id_usecase)
