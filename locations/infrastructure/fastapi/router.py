@@ -11,4 +11,4 @@ router = APIRouter(prefix="/api/locations", tags=["locations"])
 def list_locations(
     usecase: GetAllLocationsUseCase = Depends(get_get_all_locations_usecase),
 ):
-    return {"locations": usecase.run()}
+    return usecase.run()
