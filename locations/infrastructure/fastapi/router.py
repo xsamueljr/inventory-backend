@@ -7,7 +7,7 @@ from locations.infrastructure.fastapi.dependencies import get_get_all_locations_
 router = APIRouter(prefix="/api/locations", tags=["locations"])
 
 
-@router.get("/")
+@router.get("")
 def list_locations(
     usecase: GetAllLocationsUseCase = Depends(get_get_all_locations_usecase),
 ):
