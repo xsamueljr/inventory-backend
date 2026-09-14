@@ -7,6 +7,10 @@ tasks:
     cmds:
       - uv run pytest -vv
 
+  format:
+    cmds:
+      - uv run ruff format
+
   lint:
     cmds:
       - uv run ruff check
