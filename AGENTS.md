@@ -140,6 +140,12 @@ No hacer refactors no relacionados con la tarea.
 
 Si detectas mejoras fuera del alcance, deja un comentario TODO en lugar de implementarlas.
 
+## Comandos / herramientas para ello
+- `task test`
+- `task format`
+- `task lint`
+- `task lint:fix`
+
 ---
 
 # Si hay dudas
