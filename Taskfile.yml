@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  test:
+    cmds:
+      - uv run pytest -vv
+
+  lint:
+    cmds:
+      - uv run ruff check
+
+  lint-fix:
+    cmds:
+      - uv run ruff check --fix
+
+  dev:
+    cmds:
+      - uv run main.py
