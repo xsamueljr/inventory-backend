@@ -71,15 +71,18 @@ class SQLiteProductRepository(ProductRepository):
 
     def search_by_name(self, name: str) -> List[Product]:
         cur = self.__conn.cursor()
-        cur.execute("SELECT * FROM products WHERE name LIKE %?%", (name.lower(),))
+        cur.execute(
+            "SELECT * FROM products WHERE lower(name) LIKE ? AND location_id IS NULL",
+            (f"%{name.strip().lower()}%",),
+        )
         results = cur.fetchall()
         return [self.__map_to_domain(row) for row in results]
 
     def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:
         cur = self.__conn.cursor()
         cur.execute(
-            "SELECT * FROM products WHERE name LIKE %?% AND location_id = ?",
-            (name.lower(), location_id),
+            "SELECT * FROM products WHERE lower(name) LIKE ? AND location_id = ?",
+            (f"%{name.strip().lower()}%", location_id),
         )
         results = cur.fetchall()
         return [self.__map_to_domain(row) for row in results]
