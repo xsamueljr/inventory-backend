@@ -12,9 +12,15 @@ class CreateProductRequest(BaseModel):
     name: str
     stock: int
     arriving_date: Optional[date] = None
+    location_id: Optional[int] = None
 
     def map_to_domain(self) -> CreateProductDTO:
-        return CreateProductDTO(self.name, self.stock, self.arriving_date)
+        return CreateProductDTO(
+            self.name,
+            self.stock,
+            self.arriving_date,
+            location_id=self.location_id,
+        )
 
 
 class RegisterSaleRequest(BaseModel):
