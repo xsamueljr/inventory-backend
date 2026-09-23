@@ -8,6 +8,9 @@ class SearchProductsByNameUsecase:
     def __init__(self, product_repository: ProductRepository) -> None:
         self.__product_repository = product_repository
 
-    def run(self, name: str) -> List[PublicProductInfo]:
-        products = self.__product_repository.search_by_name(name)
+    def run(self, name: str, location_id: int | None = None) -> List[PublicProductInfo]:
+        if location_id is not None:
+            products = self.__product_repository.search_by_name_and_location(name, location_id)
+        else:
+            products = self.__product_repository.search_by_name(name)
         return [PublicProductInfo.from_domain(product) for product in products]
