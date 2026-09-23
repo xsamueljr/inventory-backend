@@ -41,7 +41,8 @@ def postgres_container():
                     username TEXT UNIQUE NOT NULL,
                     password TEXT NOT NULL,
                     shop_name TEXT NOT NULL,
-                    location_id INTEGER NOT NULL
+                    location_id INTEGER NOT NULL,
+                    role TEXT NOT NULL DEFAULT 'user'
                 );
 
                 CREATE TABLE IF NOT EXISTS locations (

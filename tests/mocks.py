@@ -31,10 +31,14 @@ class MockProductRepository(ProductRepository):
     def get_by_id(self, id: str) -> Product | None:
         return self.__query(lambda product: product.id == id)
 
-    def get_by_location(self, location_id: int) -> List[Product]:
+    def get_by_location(
+        self, location_id: int, limit: int | None = None, offset: int | None = None
+    ) -> List[Product]:
         return [
-            product for product in self.__products if product.location_id == location_id
-        ]
+            product
+            for product in self.__products
+            if product.location_id == location_id
+        ][offset or 0 : (limit + (offset or 0)) if limit is not None else None]
 
     def get_by_name(self, name: str) -> Product | None:
         return self.__query(lambda product: product.name == name)
@@ -59,17 +63,21 @@ class MockProductRepository(ProductRepository):
         return len(self.__products)
 
     def search_by_name(self, name: str) -> List[Product]:
+        search_term = name.strip().lower()
         return [
             product
             for product in self.__products
-            if name.strip() in product.name.strip() and product.is_global()
+            if search_term in product.name.strip().lower() and product.is_global()
         ]
 
-    def search_by_name_and_location(self, name: str, location_id: int) -> List[Product]:
+    def search_by_name_and_location(
+        self, name: str, location_id: int
+    ) -> List[Product]:
+        search_term = name.strip().lower()
         return [
             product
             for product in self.__products
-            if name.strip() in product.name.strip()
+            if search_term in product.name.strip().lower()
             and product.location_id == location_id
         ]
 
