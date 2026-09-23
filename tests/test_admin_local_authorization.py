@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from auth.domain.logged_user_info import LoggedUserInfo
 from products.application.search_by_name import SearchProductsByNameUsecase
 from products.domain.product import Product
-from products.infrastructure.fastapi.router import resolve_local_location_id
+from products.infrastructure.fastapi.helpers import resolve_local_location_id
 from tests.mocks import MockProductRepository
 from users.domain.user import User, UserRole
 

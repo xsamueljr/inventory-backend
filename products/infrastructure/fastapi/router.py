@@ -1,6 +1,6 @@
 from typing import List, TypedDict
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from auth.domain.logged_user_info import LoggedUserInfo
 from core.infrastructure.fastapi.security import get_current_user
@@ -28,6 +28,7 @@ from products.infrastructure.fastapi.dtos import (
     RegisterArrivalRequest,
     RegisterSaleRequest,
 )
+from products.infrastructure.fastapi.helpers import resolve_local_location_id
 from shared.infrastructure.fastapi.dtos import PaginationQueryParams
 
 
@@ -36,26 +37,6 @@ class CreateProductResponse(TypedDict):
 
 
 router = APIRouter(prefix="/api/products", tags=["products"])
-
-
-def resolve_local_location_id(
-    user: LoggedUserInfo,
-    location_id: int | None,
-    mode: str = "read",
-) -> int:
-    if user.is_admin:
-        return location_id if location_id is not None else user.location_id
-
-    if mode == "create":
-        return user.location_id
-
-    if location_id is None:
-        return user.location_id
-
-    if location_id != user.location_id:
-        raise HTTPException(status_code=403, detail="Forbidden location")
-
-    return user.location_id
 
 
 @router.get("")
