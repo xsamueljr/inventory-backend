@@ -1,6 +1,6 @@
 from typing import List, TypedDict
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from auth.domain.logged_user_info import LoggedUserInfo
 from core.infrastructure.fastapi.security import get_current_user
@@ -38,6 +38,26 @@ class CreateProductResponse(TypedDict):
 router = APIRouter(prefix="/api/products", tags=["products"])
 
 
+def resolve_local_location_id(
+    user: LoggedUserInfo,
+    location_id: int | None,
+    mode: str = "read",
+) -> int:
+    if user.is_admin:
+        return location_id if location_id is not None else user.location_id
+
+    if mode == "create":
+        return user.location_id
+
+    if location_id is None:
+        return user.location_id
+
+    if location_id != user.location_id:
+        raise HTTPException(status_code=403, detail="Forbidden location")
+
+    return user.location_id
+
+
 @router.get("")
 def get_products(
     name: str | None = None,
@@ -54,11 +74,19 @@ def get_products(
 
 @router.get("/local")
 def get_local_products(
+    name: str | None = None,
+    location_id: int | None = None,
     user: LoggedUserInfo = Depends(get_current_user),
     pagination: PaginationQueryParams = Depends(),
     usecase: GetLocalProductsUseCase = Depends(get_get_local_products_usecase),
+    search_usecase: SearchProductsByNameUsecase = Depends(
+        get_search_products_by_name_usecase
+    ),
 ) -> List[PublicProductInfo]:
-    return usecase.run(user.location_id, pagination.limit, pagination.offset)
+    target_location_id = resolve_local_location_id(user, location_id)
+    if name:
+        return search_usecase.run(name, target_location_id)
+    return usecase.run(target_location_id, pagination.limit, pagination.offset)
 
 
 @router.get("/{id}")
@@ -86,7 +114,7 @@ def create_local(
     usecase: CreateProductUseCase = Depends(get_create_product_usecase),
 ) -> CreateProductResponse:
     input = request.map_to_domain()
-    input.location_id = user.location_id
+    input.location_id = resolve_local_location_id(user, request.location_id, mode="create")
     id = usecase.run(user, input)
     return {"id": id}
 
